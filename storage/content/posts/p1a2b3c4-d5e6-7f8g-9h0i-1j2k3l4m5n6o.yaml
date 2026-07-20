@@ -1,0 +1,32 @@
+id: "p1a2b3c4-d5e6-7f8g-9h0i-1j2k3l4m5n6o"
+content_type: "profile"
+title: "Dr Jovan Đorđević"
+slug: "dr-jovan-djordjevic"
+excerpt: "Specijalizovan za korporativno i poslovno pravo sa preko 20 godina iskustva u zastupanju domaćih i međunarodnih klijenata."
+body: |
+  Dr Jovan Đorđević je senior partner u našoj kancelariji sa bogatim iskustvom u korporativnom pravu. 
+  
+  Diplomirao je na Pravnom fakultetu Univerziteta u Beogradu, a doktorirao na temu međunarodnog poslovnog prava. 
+  
+  Tokom svoje karijere zastupao je neke od vodećih kompanija u regionu u složenim korporativnim transakcijama, 
+  spajanjima i preuzimanjima, kao i u sporovima visokog profila.
+  
+  **Oblasti specijalizacije:**
+  - Korporativno pravo
+  - Poslovno pravo
+  - Spajanja i preuzimanja
+  - Ugovorno pravo
+  - Međunarodno poslovno pravo
+author: "Dr Jovan Đorđević"
+role: "Senior Partner, Korporativno pravo"
+status: "published"
+published_at: "2025-10-01T09:00:00+02:00"
+tags: []
+hero_image: null
+avatar_image: "images/placeholder-avatar-lawyer.svg"
+show_on_home: true
+show_in_blog: false
+priority: 100
+created_at: "2025-10-01T09:00:00+02:00"
+updated_at: "2025-10-01T09:00:00+02:00"
+

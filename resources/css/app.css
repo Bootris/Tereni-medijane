@@ -1,0 +1,199 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+    --color-navy-950: #081420;
+    --color-navy-900: #0c1b2a;
+    --color-navy-800: #132840;
+    --color-navy-700: #1b3a5c;
+    --color-navy-200: #c3cfdc;
+    --color-navy-100: #dce4ec;
+
+    --color-bronze-700: #85683c;
+    --color-bronze-600: #9a7a48;
+    --color-bronze-500: #b08d57;
+    --color-bronze-400: #c4a46f;
+    --color-bronze-300: #d5bc90;
+    --color-bronze-200: #e4d5b8;
+    --color-bronze-100: #f0e8d8;
+
+    --color-cream-50: #fbf9f4;
+    --color-cream-100: #f6f1e7;
+    --color-cream-200: #efe7d8;
+    --color-cream-300: #e3d8c2;
+
+    --color-ink-900: #1c2833;
+    --color-ink-700: #33414f;
+    --color-ink-600: #4a5866;
+    --color-ink-400: #7c8894;
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ---------------------------------------------------------------- */
+/* Reveal-on-scroll                                                  */
+/* ---------------------------------------------------------------- */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Staggered children */
+.reveal-group > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-group.is-visible > * {
+    opacity: 1;
+    transform: none;
+}
+
+.reveal-group.is-visible > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-group.is-visible > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal-group.is-visible > *:nth-child(4) { transition-delay: 0.3s; }
+.reveal-group.is-visible > *:nth-child(5) { transition-delay: 0.4s; }
+.reveal-group.is-visible > *:nth-child(6) { transition-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-group > * {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ---------------------------------------------------------------- */
+/* Article / rich-text typography                                    */
+/* ---------------------------------------------------------------- */
+
+.prose-law {
+    color: var(--color-ink-700);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+}
+
+.prose-law > * + * {
+    margin-top: 1.1em;
+}
+
+.prose-law h1,
+.prose-law h2,
+.prose-law h3,
+.prose-law h4 {
+    font-family: var(--font-display);
+    color: var(--color-navy-900);
+    line-height: 1.25;
+    margin-top: 1.8em;
+}
+
+.prose-law h1 { font-size: 1.9rem; }
+.prose-law h2 { font-size: 1.55rem; }
+.prose-law h3 { font-size: 1.3rem; }
+.prose-law h4 { font-size: 1.15rem; }
+
+.prose-law a {
+    color: var(--color-bronze-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.prose-law a:hover {
+    color: var(--color-bronze-700);
+}
+
+.prose-law strong {
+    color: var(--color-ink-900);
+}
+
+.prose-law ul,
+.prose-law ol {
+    padding-inline-start: 1.5em;
+}
+
+.prose-law ul { list-style: disc; }
+.prose-law ol { list-style: decimal; }
+
+.prose-law li + li {
+    margin-top: 0.4em;
+}
+
+.prose-law blockquote {
+    border-inline-start: 3px solid var(--color-bronze-500);
+    padding: 0.4em 0 0.4em 1.25em;
+    font-family: var(--font-display);
+    font-size: 1.2em;
+    font-style: italic;
+    color: var(--color-navy-800);
+}
+
+.prose-law img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.prose-law hr {
+    border-color: var(--color-cream-300);
+    margin-block: 2em;
+}
+
+/* ---------------------------------------------------------------- */
+/* Decorative                                                        */
+/* ---------------------------------------------------------------- */
+
+/* Fine-line grid texture for dark hero surfaces */
+.bg-hero-lines {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+}
+
+/* Oversized section symbol used as a hero watermark */
+.hero-mark {
+    font-family: var(--font-display);
+    line-height: 0.8;
+    user-select: none;
+    pointer-events: none;
+}

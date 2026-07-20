@@ -1,0 +1,22 @@
+id: "sample-11-242fc48f-e7b5-4a61-b555-e5b9bd704519"
+content_type: "article"
+title: "Pravni članak 11 - Test paginacije"
+slug: "pravni-clanak-11-test"
+excerpt: "Ovo je test članak broj 11 kreiran za demonstraciju paginacije na blog stranici."
+body: |
+  # Test članak 11
+  
+  Ovo je sadržaj test članka kreiranog za paginaciju.
+  
+  ## Sekcija 1
+  Primer teksta za članak 11.
+author: "Test Autor"
+status: "published"
+published_at: "2025-09-11T10:00:00+02:00"
+tags: ["test", "paginacija"]
+hero_image: null
+show_on_home: false
+show_in_blog: true
+priority: 49
+created_at: "2025-09-11T10:00:00+02:00"
+updated_at: "2025-09-11T10:00:00+02:00"

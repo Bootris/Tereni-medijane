@@ -1,0 +1,33 @@
+id: "p3c4d5e6-f7g8-9h0i-1j2k-3l4m5n6o7p8q"
+content_type: "profile"
+title: "Nikola Jovanović"
+slug: "nikola-jovanovic"
+excerpt: "Iskusan advokat u oblasti krivičnog prava sa impresivnim rezultatima u odbrani klijenata pred sudovima svih instanci."
+body: |
+  Nikola Jovanović je advokat specijalizovan za krivično pravo sa preko 12 godina iskustva.
+  
+  Tokom svoje karijere uspešno je branio klijen te u složenim krivičnim predmetima, 
+  uključujući privredni kriminal, krivična dela nasilja i saobraćajne prekršaje.
+  
+  Nikola je poznat po detaljnoj pripremi predmeta, strateškom pristupu odbrani i 
+  posvećenosti postizanju najboljih mogućih rezultata za svoje klijente.
+  
+  **Oblasti specijalizacije:**
+  - Krivično pravo
+  - Privredni kriminal
+  - Krivična dela protiv života i tela
+  - Saobraćajni prekršaji
+  - Odbrana u žalbenom postupku
+author: "Nikola Jovanović"
+role: "Advokat, Krivično pravo"
+status: "published"
+published_at: "2025-10-01T09:00:00+02:00"
+tags: []
+hero_image: null
+avatar_image: "images/placeholder-avatar-lawyer.svg"
+show_on_home: true
+show_in_blog: false
+priority: 90
+created_at: "2025-10-01T09:00:00+02:00"
+updated_at: "2025-10-01T09:00:00+02:00"
+
