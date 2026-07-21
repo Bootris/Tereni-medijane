@@ -10,39 +10,40 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Seed a fresh site from config/site.php — nothing here is client-specific,
+     * so the same seeder bootstraps any business. Idempotent.
      */
     public function run(): void
     {
+        $admin = config('site.admin');
+
         User::updateOrCreate(
-            ['email' => 'borisboncic95@gmail.com'],
+            ['email' => $admin['email']],
             [
-                'name' => 'Boris Boncic',
-                'password' => env('SEED_ADMIN_PASSWORD', 'password'),
+                'name' => $admin['name'],
+                'password' => $admin['password'],   // hashed via User cast
                 'role' => User::ROLE_ADMIN,
             ],
         );
 
-        foreach ([
-            'Privredno pravo',
-            'Građansko pravo',
-            'Krivično pravo',
-            'Porodično pravo',
-            'Radno pravo',
-        ] as $name) {
+        // Blog taxonomy from the chosen preset.
+        $preset = config('site.preset', 'generic');
+        foreach (config("site.presets.$preset.categories", []) as $name) {
             Category::firstOrCreate(['name' => $name]);
         }
 
+        // Brand + identity defaults. Only fill what isn't set yet so re-seeding
+        // never clobbers values the client edited in the admin.
         $defaults = [
-            'site_name' => 'Advokatska kancelarija',
-            'email' => 'info@example.com',
-            'phone' => '+381 11 000 0000',
-            'address' => 'Ulica i broj, 11000 Beograd',
-            'working_hours' => 'Pon–Pet 09:00–17:00',
+            'site_name' => config('site.name'),
+            'tagline' => config('site.tagline'),
+            'theme_primary' => config('site.brand.primary'),
+            'theme_accent' => config('site.brand.accent'),
+            'theme_font' => config('site.brand.font'),
         ];
 
         foreach ($defaults as $key => $value) {
-            if (Setting::query()->where('key', $key)->doesntExist()) {
+            if ($value !== null && $value !== '' && Setting::query()->where('key', $key)->doesntExist()) {
                 Setting::set($key, $value);
             }
         }

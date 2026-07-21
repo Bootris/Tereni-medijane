@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use BackedEnum;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -42,10 +44,29 @@ class ManageSettings extends Page
         return $schema
             ->components([
                 Section::make('Identity')
+                    ->columns(2)
                     ->components([
                         TextInput::make('site_name')
                             ->required()
+                            ->columnSpanFull()
                             ->helperText('Shown in the header, footer and browser title.'),
+                        TextInput::make('tagline')
+                            ->helperText('Short line under the name (hero subtitle).'),
+                        FileUpload::make('logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->helperText('Optional. Used in header and as favicon source.'),
+                    ]),
+                Section::make('Branding')
+                    ->columns(3)
+                    ->description('Colors and font are served to the frontend and applied as CSS variables — no code change to rebrand.')
+                    ->components([
+                        ColorPicker::make('theme_primary')->label('Primary color'),
+                        ColorPicker::make('theme_accent')->label('Accent color'),
+                        TextInput::make('theme_font')
+                            ->label('Heading font')
+                            ->helperText('A Google Font family name, e.g. Inter, Playfair Display.'),
                     ]),
                 Section::make('Contact details')
                     ->columns(2)
