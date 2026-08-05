@@ -56,21 +56,26 @@ check_url() {
 
 check_url /up 200
 check_url / 302
-check_url /sr 200
-check_url /en 200
 check_url /blog 200
 check_url /sitemap.xml 200
 check_url "/${ADMIN_PATH}/login" 200
 
-# Tereni Medijana — samo kad je modul upaljen.
+# Kad je Tereni modul upaljen, početna (i locale-home) vode na mapu.
 if grep -qE '^SITE_FEATURE_TERENI=(true|1)' .env 2>/dev/null; then
+    check_url /sr 302
+    check_url /en 302
     check_url /mapa 200
     check_url /api/v1/tereni 200
+    curl -sL "$BASE/" | grep -q 'Tereni u Medijani' \
+        && ok "početna renderuje mapu terena" \
+        || bad "početna ne renderuje mapu terena"
+else
+    check_url /sr 200
+    check_url /en 200
+    curl -s "$BASE/sr" | grep -q '<title' \
+        && ok "početna renderuje sadržaj" \
+        || bad "početna ne renderuje očekivani sadržaj"
 fi
-
-curl -s "$BASE/sr" | grep -q '<title' \
-    && ok "početna renderuje sadržaj" \
-    || bad "početna ne renderuje očekivani sadržaj"
 
 curl -s "$BASE/${ADMIN_PATH}/login" | grep -q 'Lozinka' \
     && ok "admin login renderuje (prevodi rade)" \

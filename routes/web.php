@@ -10,7 +10,10 @@ use App\Http\Controllers\Tereni\QrController as TereniQrController;
 use App\Http\Controllers\Tereni\ReportController as TereniReportController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect(app()->getLocale()));
+// Kad je Tereni modul upaljen, mapa JE sajt — koren vodi pravo na nju.
+Route::get('/', fn () => config('site.features.tereni')
+    ? redirect()->route('tereni.map')
+    : redirect(app()->getLocale()));
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
@@ -46,5 +49,11 @@ Route::group([
     'where' => ['locale' => 'en|sr'],
     'middleware' => 'setlocale',
 ], function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Advokatska landing je deo site-core template-a; za Tereni proizvod i
+    // locale-home vodi na mapu (ruta 'home' ostaje zbog linkova u layoutu).
+    Route::get('/', function () {
+        return config('site.features.tereni')
+            ? redirect()->route('tereni.map')
+            : app(HomeController::class)->index();
+    })->name('home');
 });

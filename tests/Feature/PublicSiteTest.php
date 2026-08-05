@@ -26,13 +26,19 @@ class PublicSiteTest extends TestCase
         ], $attributes));
     }
 
-    public function test_root_redirects_to_default_locale(): void
+    public function test_root_and_locale_home_redirect_to_map(): void
     {
-        $this->get('/')->assertRedirect('/sr');
+        // Tereni je proizvod ovog sajta (SITE_FEATURE_TERENI=true u phpunit.xml).
+        $this->get('/')->assertRedirect('/mapa');
+        $this->get('/sr')->assertRedirect('/mapa');
+        $this->get('/en')->assertRedirect('/mapa');
     }
 
-    public function test_home_renders_in_both_locales(): void
+    public function test_home_falls_back_to_site_core_landing_when_tereni_disabled(): void
     {
+        config(['site.features.tereni' => false]);
+
+        $this->get('/')->assertRedirect('/sr');
         $this->get('/sr')->assertOk()->assertSee('Pravna sigurnost.');
         $this->get('/en')->assertOk()->assertSee('Legal certainty.');
     }
