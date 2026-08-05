@@ -12,6 +12,10 @@ Backend stays the same; only branding, texts, and the frontend change per client
 > · backend/API contract [docs/BACKEND.md](docs/BACKEND.md) · frontend templates
 > [docs/FRONTEND.md](docs/FRONTEND.md) · design system [docs/DESIGN.md](docs/DESIGN.md).
 > **This repo is reference Example #1 (Blade monolith) — do not refactor it.**
+>
+> **Optional module:** *Tereni Medijana* — public map + QR reporting for municipal
+> sports fields ([docs/TERENI.md](docs/TERENI.md)). Dormant unless
+> `SITE_FEATURE_TERENI=true`.
 
 **Stack:** Laravel 12 · Filament v4 (admin) · **SQLite** (single-file DB) · Blade + Tailwind (frontend) · PHP 8.2.
 

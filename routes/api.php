@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\CourtController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\TeamController;
 use Illuminate\Support\Facades\Route;
@@ -23,4 +25,12 @@ Route::prefix('v1')->group(function () {
 
     Route::post('contact', [ContactController::class, 'store'])
         ->middleware('throttle:5,1');
+
+    // Tereni Medijana — public fields + reporting (dormant unless enabled).
+    if (config('site.features.tereni')) {
+        Route::get('tereni', [CourtController::class, 'index']);
+        Route::get('tereni/{court}', [CourtController::class, 'show']);
+        Route::post('tereni/{court}/prijave', [ReportController::class, 'store'])
+            ->middleware('throttle:5,1');
+    }
 });

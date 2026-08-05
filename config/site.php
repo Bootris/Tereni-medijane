@@ -58,6 +58,29 @@ return [
         'team' => env('SITE_FEATURE_TEAM', true),
         'contact' => env('SITE_FEATURE_CONTACT', true),
         'booking' => env('SITE_FEATURE_BOOKING', false),
+        // "Tereni Medijana" — public map + QR reporting for sports fields.
+        'tereni' => env('SITE_FEATURE_TERENI', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tereni Medijana module
+    |--------------------------------------------------------------------------
+    | Public map + QR reporting for municipal sports fields. Enabled per client
+    | via SITE_FEATURE_TERENI=true. Routes stay dormant when the feature is off.
+    */
+    'tereni' => [
+        // Map default centre + zoom (Medijana, Niš). Overridable per client.
+        'map' => [
+            'lat' => (float) env('TERENI_MAP_LAT', 43.3192),
+            'lng' => (float) env('TERENI_MAP_LNG', 21.9161),
+            'zoom' => (int) env('TERENI_MAP_ZOOM', 14),
+        ],
+        // SMS notifications to stewards. Off by default — logs instead (stub).
+        'sms' => [
+            'enabled' => env('TERENI_SMS_ENABLED', false),
+            'log_channel' => env('TERENI_SMS_LOG_CHANNEL', 'stack'),
+        ],
     ],
 
     /*
