@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Reports\Schemas;
 
 use App\Enums\ReportStatus;
 use App\Models\Report;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -44,14 +45,29 @@ class ReportForm
                             ->label('Opis')
                             ->columnSpanFull()
                             ->content(fn (?Report $record): string => $record?->description ?: '—'),
-                        Placeholder::make('photo')
+                        FileUpload::make('photo')
                             ->label('Fotografija')
                             ->columnSpanFull()
+                            ->image()
+                            ->imagePreviewHeight('300')
+                            ->disk('public')
+                            ->directory('tereni/reports')
+                            ->maxSize(8192)
+                            // Without this, a photo file missing from disk gets
+                            // silently dropped from state and any unrelated save
+                            // would NULL the DB reference.
+                            ->fetchFileInformation(false)
+                            // Citizens must attach one; moderation may remove an
+                            // inappropriate photo or upload a replacement. The
+                            // old file is deleted from disk on save (model hook).
+                            ->helperText('X uklanja fotografiju (neprikladna), prevlačenjem dodaš novu — stara se briše sa diska pri čuvanju.'),
+                        Placeholder::make('photo_link')
+                            ->hiddenLabel()
+                            ->columnSpanFull()
+                            ->visible(fn (?Report $record): bool => (bool) $record?->photoUrl())
                             ->content(fn (?Report $record): HtmlString => new HtmlString(
-                                $record?->photoUrl()
-                                    ? '<a href="'.e($record->photoUrl()).'" target="_blank" rel="noopener">'
-                                        .'<img src="'.e($record->photoUrl()).'" style="max-height:16rem;border-radius:0.5rem" alt=""></a>'
-                                    : '—'
+                                '<a href="'.e($record->photoUrl()).'" target="_blank" rel="noopener" style="text-decoration:underline">'
+                                .'Otvori fotografiju u punoj veličini ↗</a> <span style="color:#9ca3af">(novi tab)</span>'
                             )),
                     ]),
 

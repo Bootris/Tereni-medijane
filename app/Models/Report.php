@@ -35,6 +35,57 @@ class Report extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        // Keep the public disk in sync with the record: replacing or clearing
+        // the photo (moderation) removes the old file, deleting the report
+        // removes its file. Deletion is guarded — see deletePhotoFile().
+        static::updated(function (Report $report) {
+            $old = $report->getOriginal('photo');
+
+            if (! $old || $old === $report->photo) {
+                return;
+            }
+
+            // Stale concurrent edit: if the "new" photo doesn't actually exist
+            // on disk, this save is reviving a dead path — don't also destroy
+            // the file the other session just stored.
+            if ($report->photo && ! Storage::disk('public')->exists($report->photo)) {
+                return;
+            }
+
+            static::deletePhotoFile($old, exceptReportId: $report->getKey());
+        });
+
+        static::deleted(function (Report $report) {
+            if ($report->photo) {
+                static::deletePhotoFile($report->photo, exceptReportId: $report->getKey());
+            }
+        });
+    }
+
+    /**
+     * Delete a report photo from the public disk — defensively. The stored
+     * path round-trips through a client-controllable form field, so only
+     * files inside this module's own directory are ever deleted, and never
+     * one that another report still references.
+     */
+    public static function deletePhotoFile(string $path, ?int $exceptReportId = null): void
+    {
+        if (! str_starts_with($path, 'tereni/reports/')) {
+            return;
+        }
+
+        $stillReferenced = static::query()
+            ->when($exceptReportId !== null, fn ($q) => $q->whereKeyNot($exceptReportId))
+            ->where('photo', $path)
+            ->exists();
+
+        if (! $stillReferenced) {
+            Storage::disk('public')->delete($path);
+        }
+    }
+
     public function court(): BelongsTo
     {
         return $this->belongsTo(Court::class);

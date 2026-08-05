@@ -232,6 +232,137 @@ class TereniTest extends TestCase
         $this->assertTrue($report->fresh()->is_public);
     }
 
+    public function test_court_without_own_coordinates_inherits_facility_location(): void
+    {
+        // Facility has coordinates, the court itself doesn't — it must still
+        // show up on the map and in the API, at the facility's location.
+        $court = Court::factory()
+            ->for(\App\Models\Facility::factory()->create(['lat' => 43.31, 'lng' => 21.91]))
+            ->create(['name' => 'Nasleđeni teren', 'lat' => null, 'lng' => null]);
+
+        $this->get(route('tereni.map'))->assertOk()->assertSee('Nasleđeni teren');
+
+        $this->getJson('/api/v1/tereni')
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Nasleđeni teren', 'lat' => 43.31, 'lng' => 21.91]);
+    }
+
+    public function test_photo_cleanup_never_touches_foreign_or_shared_files(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('branding/logo.png', 'x');
+        Storage::disk('public')->put('tereni/reports/shared.jpg', 'x');
+
+        $court = $this->court();
+        // Injected path outside the module dir (client-controllable field).
+        $evil = $this->publicReport($court, ['photo' => 'branding/logo.png']);
+        // Two reports referencing the same file.
+        $a = $this->publicReport($court, ['photo' => 'tereni/reports/shared.jpg']);
+        $b = $this->publicReport($court, ['photo' => 'tereni/reports/shared.jpg']);
+
+        $evil->delete();
+        Storage::disk('public')->assertExists('branding/logo.png'); // untouched
+
+        $a->delete();
+        Storage::disk('public')->assertExists('tereni/reports/shared.jpg'); // b still uses it
+
+        $b->delete();
+        Storage::disk('public')->assertMissing('tereni/reports/shared.jpg'); // last reference gone
+    }
+
+    public function test_gallery_cleanup_never_touches_foreign_or_shared_files(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('blog/cover.jpg', 'x');
+        Storage::disk('public')->put('tereni/courts/shared.jpg', 'x');
+
+        $a = $this->court(['gallery' => ['blog/cover.jpg', 'tereni/courts/shared.jpg']]);
+        $b = $this->court(['gallery' => ['tereni/courts/shared.jpg']]);
+
+        $a->delete();
+        Storage::disk('public')->assertExists('blog/cover.jpg');            // outside module dir
+        Storage::disk('public')->assertExists('tereni/courts/shared.jpg');  // b still uses it
+
+        $b->delete();
+        Storage::disk('public')->assertMissing('tereni/courts/shared.jpg');
+    }
+
+    public function test_replacing_or_clearing_report_photo_deletes_old_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tereni/reports/old.jpg', 'x');
+        Storage::disk('public')->put('tereni/reports/new.jpg', 'x');
+
+        $report = $this->publicReport($this->court(), ['photo' => 'tereni/reports/old.jpg']);
+
+        // Moderation replaces the photo → the old file goes.
+        $report->update(['photo' => 'tereni/reports/new.jpg']);
+        Storage::disk('public')->assertMissing('tereni/reports/old.jpg');
+        Storage::disk('public')->assertExists('tereni/reports/new.jpg');
+
+        // Moderation removes it entirely (inappropriate) → file goes, report stays.
+        $report->update(['photo' => null]);
+        Storage::disk('public')->assertMissing('tereni/reports/new.jpg');
+        $this->assertNull($report->fresh()->photo);
+    }
+
+    public function test_deleting_report_deletes_photo_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tereni/reports/r.jpg', 'x');
+
+        $report = $this->publicReport($this->court(), ['photo' => 'tereni/reports/r.jpg']);
+        $report->delete();
+
+        Storage::disk('public')->assertMissing('tereni/reports/r.jpg');
+    }
+
+    public function test_removing_gallery_images_deletes_files(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tereni/courts/a.jpg', 'x');
+        Storage::disk('public')->put('tereni/courts/b.jpg', 'x');
+
+        $court = $this->court(['gallery' => ['tereni/courts/a.jpg', 'tereni/courts/b.jpg']]);
+        $court->update(['gallery' => ['tereni/courts/b.jpg']]);
+
+        Storage::disk('public')->assertMissing('tereni/courts/a.jpg');
+        Storage::disk('public')->assertExists('tereni/courts/b.jpg');
+    }
+
+    public function test_deleting_court_deletes_gallery_and_report_photos(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tereni/courts/g.jpg', 'x');
+        Storage::disk('public')->put('tereni/reports/p.jpg', 'x');
+
+        $court = $this->court(['gallery' => ['tereni/courts/g.jpg']]);
+        $this->publicReport($court, ['photo' => 'tereni/reports/p.jpg']);
+
+        $court->delete();
+
+        Storage::disk('public')->assertMissing('tereni/courts/g.jpg');
+        Storage::disk('public')->assertMissing('tereni/reports/p.jpg');
+        $this->assertSame(0, Report::count());
+    }
+
+    public function test_deleting_facility_cleans_all_files(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('tereni/courts/f.jpg', 'x');
+        Storage::disk('public')->put('tereni/reports/fr.jpg', 'x');
+
+        $court = $this->court(['gallery' => ['tereni/courts/f.jpg']]);
+        $this->publicReport($court, ['photo' => 'tereni/reports/fr.jpg']);
+
+        $court->facility->delete();
+
+        Storage::disk('public')->assertMissing('tereni/courts/f.jpg');
+        Storage::disk('public')->assertMissing('tereni/reports/fr.jpg');
+        $this->assertSame(0, Court::count());
+        $this->assertSame(0, Report::count());
+    }
+
     public function test_admin_panel_tereni_pages_render(): void
     {
         $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);

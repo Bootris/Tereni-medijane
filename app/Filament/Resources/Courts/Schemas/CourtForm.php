@@ -101,10 +101,13 @@ class CourtForm
                             ->image()
                             ->multiple()
                             ->reorderable()
+                            ->downloadable()
                             ->disk('public')
                             ->directory('tereni/courts')
                             ->maxSize(8192)
-                            ->maxFiles(12),
+                            ->maxFiles(12)
+                            // Removed images are deleted from disk on save (model hook).
+                            ->helperText('Do 12 slika, najviše 8 MB po slici. Prevuci sličice za redosled prikaza; X uklanja sliku (briše se sa diska pri čuvanju).'),
                     ]),
             ]);
     }

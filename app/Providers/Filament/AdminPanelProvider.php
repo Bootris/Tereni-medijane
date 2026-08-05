@@ -28,6 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path(config('site.admin_path'))
             ->login()
+            // User menu → Profile: everyone (including editors, who can't reach
+            // the Users resource) can change their own name/email/password.
+            ->profile(isSimple: false)
             ->brandName(fn (): string => \App\Models\Setting::get('site_name', 'Law Office'))
             ->colors([
                 'primary' => Color::hex('#b08d57'),

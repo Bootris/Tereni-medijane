@@ -37,6 +37,12 @@ class Facility extends Model
                 $facility->slug = static::uniqueSlug($facility->name);
             }
         });
+
+        // Delete courts through Eloquent (not the DB cascade) so each court's
+        // deleting hook can clean its gallery and report photos off the disk.
+        static::deleting(function (Facility $facility) {
+            $facility->courts()->get()->each->delete();
+        });
     }
 
     public static function uniqueSlug(string $name): string

@@ -33,7 +33,7 @@ are all hidden.
 | `Facility`          | `facilities`             | Objekat — škola / otvoreni teren; ownership, address, coords. |
 | `Court`             | `courts`                 | Teren — type, surface, dimensions, lighting, access, gallery, coords. **`slug` is the QR target.** |
 | `Steward`           | `stewards`               | Zaduženo lice — notified (email + SMS) on new reports. |
-| `Report`            | `reports`                | Prijava — category, photo (**required**), status, moderation flags. |
+| `Report`            | `reports`                | Prijava — category, photo (**required at submission**; moderation may remove it), status, moderation flags. |
 | `ReportStatusChange`| `report_status_changes`  | One row per transition → the public timeline. |
 
 Enums in `app/Enums/`: `CourtType`, `CourtAccess`, `ReportCategory`,
@@ -124,5 +124,7 @@ admin aren't empty. Idempotent.
 ## Tests
 
 `tests/Feature/TereniTest.php` — public pages, submission + moderation, status
-history, notifications, flag, QR, the JSON API, and Filament admin rendering.
+history, notifications, flag, QR, the JSON API, Filament admin rendering, and
+image-file cleanup (replacing/removing photos and gallery images, deleting
+reports/courts/facilities — guarded so only this module's own files ever go).
 Run with the site-core suite: `php artisan test`.
