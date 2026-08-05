@@ -36,11 +36,19 @@ php artisan migrate --force
 php artisan storage:link >/dev/null 2>&1 || true
 php artisan config:clear >/dev/null
 
+# Admin ruta je tajna i po klijentu — čitaj je iz .env, nikad ne hardkoduj /admin.
+ADMIN_PATH=$(grep -E '^ADMIN_PATH=' .env | tail -1 | cut -d= -f2- | tr -d '"')
+ADMIN_PATH="${ADMIN_PATH:-admin}"
+
 echo ""
 echo "════════════════════════════════════════════════"
-echo "  Sajt:   http://127.0.0.1:${PORT}/sr"
-echo "  Blog:   http://127.0.0.1:${PORT}/blog"
-echo "  Admin:  http://127.0.0.1:${PORT}/admin"
+if grep -qE '^SITE_FEATURE_TERENI=(true|1)' .env; then
+    echo "  Mapa:   http://127.0.0.1:${PORT}/mapa   (i / vodi tu)"
+else
+    echo "  Sajt:   http://127.0.0.1:${PORT}/sr"
+    echo "  Blog:   http://127.0.0.1:${PORT}/blog"
+fi
+echo "  Admin:  http://127.0.0.1:${PORT}/${ADMIN_PATH}"
 echo "════════════════════════════════════════════════"
 echo ""
 
