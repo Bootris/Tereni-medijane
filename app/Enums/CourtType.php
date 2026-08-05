@@ -24,6 +24,19 @@ enum CourtType: string
         };
     }
 
+    /** Map-marker / filter icon. */
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Basketball => '🏀',
+            self::Football => '⚽',
+            self::Volleyball => '🏐',
+            self::Athletics => '🏃',
+            self::Tennis => '🎾',
+            self::Multipurpose => '🏟️',
+        };
+    }
+
     /** @return array<string, string> */
     public static function options(): array
     {
