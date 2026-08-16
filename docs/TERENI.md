@@ -111,8 +111,21 @@ default. Bind a real gateway (phase 2) without touching callers.
 php artisan db:seed --class=Database\\Seeders\\TereniDemoSeeder
 ```
 
-Creates one school with two fields and a steward around Medijana so the map and
-admin aren't empty. Idempotent.
+Creates three locations around Medijana — a school yard (asphalt basketball, an
+artificial-turf pitch, a new modular volleyball court), an asphalt court between
+apartment blocks, and the park courts (old basketball + a newly built fenced
+mini-pitch) — six fields with a steward each, so the map, the field pages and
+the admin aren't empty.
+
+The gallery of every seeded field comes from the survey photos in
+`database/seeders/photos/tereni/`, copied onto the public disk under
+`tereni/courts/` (the directory the admin uploads to, and the only one the
+gallery cleanup is allowed to touch). Names, addresses and coordinates are
+placeholders until phase 1 confirms them per location; the photos are real.
+
+Idempotent: re-running never duplicates a row, never re-copies a photo, and
+never overwrites a gallery an editor has already curated in the admin.
+`php artisan storage:link` must have run for the images to be served.
 
 ## Phases
 

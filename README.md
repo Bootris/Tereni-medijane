@@ -157,7 +157,7 @@ composer install
 cp .env.example .env && php artisan key:generate
 touch database/database.sqlite
 php artisan migrate --seed                                      # admin + podešavanja
-php artisan db:seed --class='Database\Seeders\TereniDemoSeeder' # demo škola (opciono)
+php artisan db:seed --class='Database\Seeders\TereniDemoSeeder' # pilot tereni + slike (opciono)
 php artisan storage:link
 npm install && npm run build
 php artisan serve
