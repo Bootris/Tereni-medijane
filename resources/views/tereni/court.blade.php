@@ -1,38 +1,92 @@
 <x-tereni.layout :title="$court->name" :description="'Prijavi stanje terena: ' . $court->name . ($court->facility ? ' — ' . $court->facility->name : '')">
-    <p style="margin:0 0 .3rem"><a href="{{ route('tereni.map') }}" class="muted">← Mapa terena</a></p>
+    <x-slot:styles>
+        .gallery-main { position:relative; overflow:hidden; }
+        .gallery-main img { width:100%; height:min(52vh,420px); object-fit:cover; display:block; cursor:zoom-in; }
+        .g-nav { position:absolute; top:50%; transform:translateY(-50%); width:2.6rem; height:2.6rem;
+            border:0; border-radius:999px; background:rgba(255,255,255,.92); font-size:1.5rem; line-height:1;
+            cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+        .g-nav:hover { background:#fff; }
+        .g-count { position:absolute; right:.6rem; bottom:.6rem; background:rgba(15,23,42,.75);
+            color:#fff; font-size:.78rem; font-weight:600; padding:.15rem .6rem; border-radius:999px; }
+        .g-thumbs { display:flex; gap:.45rem; margin-top:.5rem; overflow-x:auto; padding-bottom:.2rem; }
+        .g-thumb { flex:0 0 auto; border:2px solid transparent; border-radius:.5rem; padding:0;
+            background:none; cursor:pointer; overflow:hidden; }
+        .g-thumb.active { border-color:var(--brand); }
+        .g-thumb img { width:84px; height:60px; object-fit:cover; display:block; border-radius:.35rem; }
+        h1.display { margin:.2rem 0 .45rem; font-size:clamp(1.8rem,5vw,2.5rem); }
+        .back-link { font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:.92rem;
+            letter-spacing:.08em; text-transform:uppercase; text-decoration:none; color:var(--muted); }
+        .back-link:hover { color:var(--teren-dark); }
+        .report-card { border-top:4px solid var(--signal); }
+        .timeline { list-style:none; padding:0; margin:.6rem 0 0; border-left:2px solid var(--line); }
+        .timeline li { padding:.15rem 0 .5rem .9rem; position:relative; }
+        .timeline li::before { content:''; position:absolute; left:-6px; top:.42em;
+            width:8px; height:8px; border-radius:999px; background:var(--card); border:2px solid var(--teren); }
+        .form-grid { display:grid; gap:1rem; grid-template-columns:1fr 1fr; }
+        @media (max-width:560px) {
+            .report-card .btn { width:100%; text-align:center; }
+            .form-grid { grid-template-columns:1fr; }
+            .form-grid > div { grid-column:auto !important; }
+        }
+    </x-slot:styles>
 
-    <h1 style="margin:.1rem 0 .4rem;font-size:1.7rem">{{ $court->name }}</h1>
-    @if ($court->facility)
-        <p class="muted" style="margin:0 0 .6rem">
-            {{ $court->facility->name }}@if ($court->facility->address) · {{ $court->facility->address }}@endif
-        </p>
+    <p style="margin:0 0 .5rem"><a href="{{ route('tereni.map') }}" class="back-link">← Mapa terena</a></p>
+
+    <span class="eyebrow">{{ $court->type->label() }}@if ($court->facility) · {{ $court->facility->name }}@endif</span>
+    <h1 class="display rule">{{ $court->name }}</h1>
+    @if ($court->facility?->address)
+        <p class="muted" style="margin:0 0 .7rem">{{ $court->facility->address }}</p>
     @endif
 
-    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem">
-        <span class="badge badge-gray">{{ $court->type->label() }}</span>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0 1rem">
         <span class="badge badge-{{ $court->access->color() }}">{{ $court->access->label() }}</span>
         @if ($court->surface)<span class="badge badge-gray">Podloga: {{ $court->surface }}</span>@endif
         @if ($court->dimensions)<span class="badge badge-gray">{{ $court->dimensions }}</span>@endif
         <span class="badge badge-gray">{{ $court->has_lighting ? 'Osvetljenje: da' : 'Osvetljenje: ne' }}</span>
     </div>
 
+    @php
+        $galleryUrls = array_values(array_map(
+            fn (string $image) => \Illuminate\Support\Facades\Storage::disk('public')->url($image),
+            $court->gallery ?? [],
+        ));
+    @endphp
+
+    @if ($galleryUrls)
+        {{-- Big carousel: current state of the court, browsable left/right.
+             Main photo opens the fullscreen viewer. --}}
+        <div style="margin:0 0 1rem">
+            <div class="gallery-main card">
+                <a id="g-open" href="{{ $galleryUrls[0] }}" target="_blank" rel="noopener"
+                    aria-label="Uvećaj fotografiju terena">
+                    <img id="g-main" src="{{ $galleryUrls[0] }}" alt="Fotografija terena — {{ $court->name }}">
+                </a>
+                @if (count($galleryUrls) > 1)
+                    <button type="button" class="g-nav" id="g-prev" style="left:.6rem" aria-label="Prethodna fotografija">‹</button>
+                    <button type="button" class="g-nav" id="g-next" style="right:.6rem" aria-label="Sledeća fotografija">›</button>
+                    <span class="g-count" id="g-count">1 / {{ count($galleryUrls) }}</span>
+                @endif
+            </div>
+            @if (count($galleryUrls) > 1)
+                <div class="g-thumbs">
+                    @foreach ($galleryUrls as $j => $url)
+                        <button type="button" class="g-thumb @if ($j === 0) active @endif" data-g="{{ $j }}"
+                            aria-label="Fotografija {{ $j + 1 }}">
+                            <img src="{{ $url }}" alt="" loading="lazy">
+                        </button>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    @endif
+
     @if ($court->description)
         <p>{{ $court->description }}</p>
     @endif
 
-    @if (!empty($court->gallery))
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin:1rem 0">
-            @foreach ($court->gallery as $image)
-                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($image) }}"
-                    alt="" loading="lazy"
-                    style="width:100%;height:110px;object-fit:cover;border-radius:.5rem;border:1px solid var(--line)">
-            @endforeach
-        </div>
-    @endif
-
     {{-- Report form --}}
-    <section class="card" style="padding:1.25rem;margin:1.5rem 0">
-        <h2 style="margin:0 0 .25rem;font-size:1.2rem">Prijavi problem</h2>
+    <section class="card report-card" style="padding:1.25rem;margin:1.5rem 0">
+        <h2 class="section-title" style="margin:0 0 .25rem">Prijavi problem</h2>
         <p class="muted" style="margin:0 0 1rem">Bez registracije. Fotografija je obavezna. Prijava se objavljuje nakon moderacije.</p>
 
         @if (session('report_success'))
@@ -52,7 +106,7 @@
                 <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
             </div>
 
-            <div style="display:grid;gap:1rem;grid-template-columns:1fr 1fr">
+            <div class="form-grid">
                 <div style="grid-column:1/-1">
                     <label for="category">Tip problema *</label>
                     <select id="category" name="category" required>
@@ -95,7 +149,7 @@
 
     {{-- Public timeline of reports --}}
     <section>
-        <h2 style="font-size:1.2rem">Prijave za ovaj teren ({{ $reports->count() }})</h2>
+        <h2 class="section-title rule" style="margin:0 0 .9rem">Prijave za ovaj teren ({{ $reports->count() }})</h2>
 
         @forelse ($reports as $report)
             <article class="card" style="padding:1rem;margin-bottom:1rem">
@@ -128,9 +182,9 @@
 
                         {{-- Status timeline — the public pressure. --}}
                         @if ($report->statusChanges->isNotEmpty())
-                            <ol style="list-style:none;padding:0;margin:.6rem 0 0;border-left:2px solid var(--line)">
+                            <ol class="timeline">
                                 @foreach ($report->statusChanges as $change)
-                                    <li style="padding:.15rem 0 .45rem .8rem;position:relative">
+                                    <li>
                                         <span style="font-weight:600">{{ $change->status->label() }}</span>
                                         <span class="muted" style="font-size:.8rem"> · {{ $change->created_at?->format('d.m.Y H:i') }}</span>
                                         @if ($change->note)
@@ -164,6 +218,49 @@
     </section>
 
     <x-slot:scripts>
+        <x-tereni.gallery-lightbox />
+
+        @if ($galleryUrls)
+            <script>
+                (function () {
+                    const photos = @json($galleryUrls);
+                    const title = @json($court->type->icon() . ' ' . $court->name);
+                    const main = document.getElementById('g-main');
+                    const openLink = document.getElementById('g-open');
+                    const count = document.getElementById('g-count');
+                    const thumbs = document.querySelectorAll('.g-thumb');
+                    let idx = 0;
+
+                    function show(i) {
+                        idx = (i + photos.length) % photos.length;
+                        main.src = photos[idx];
+                        openLink.href = photos[idx];
+                        if (count) count.textContent = (idx + 1) + ' / ' + photos.length;
+                        thumbs.forEach((t) => t.classList.toggle('active', Number(t.dataset.g) === idx));
+                    }
+
+                    document.getElementById('g-prev')?.addEventListener('click', () => show(idx - 1));
+                    document.getElementById('g-next')?.addEventListener('click', () => show(idx + 1));
+                    thumbs.forEach((t) => t.addEventListener('click', () => show(Number(t.dataset.g))));
+
+                    openLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.tereniGallery.open(photos, idx, title);
+                    });
+
+                    // Swipe on the main photo too, not just in the fullscreen viewer.
+                    let touchX = null;
+                    main.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+                    main.addEventListener('touchend', (e) => {
+                        if (touchX === null) return;
+                        const dx = e.changedTouches[0].clientX - touchX;
+                        touchX = null;
+                        if (Math.abs(dx) > 40) show(dx < 0 ? idx + 1 : idx - 1);
+                    }, { passive: true });
+                })();
+            </script>
+        @endif
+
         {{-- Lightbox: full-size photo + the exact problem (category, status, when, description). --}}
         <div id="lb" role="dialog" aria-modal="true" aria-label="Pregled prijave"
             style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,.88);padding:1rem;align-items:center;justify-content:center">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CourtAccess;
 use App\Enums\CourtType;
+use App\Enums\ReportStatus;
 use Database\Factories\CourtFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -128,6 +129,14 @@ class Court extends Model
         return $this->reports()->where('is_public', true)->latest();
     }
 
+    /** Open public reports — the ones that flag a court as "ima problem". */
+    public function openPublicReports(): HasMany
+    {
+        return $this->reports()
+            ->where('is_public', true)
+            ->whereNotIn('status', [ReportStatus::Resolved->value, ReportStatus::Rejected->value]);
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
@@ -154,5 +163,30 @@ class Court extends Model
     public function longitude(): ?float
     {
         return $this->lng ?? $this->facility?->lng;
+    }
+
+    /**
+     * The array shape the public card/map UI consumes (Blade cards + map JSON).
+     * `has_issue` expects an eager `openPublicReports as open_reports_count`.
+     */
+    public function toCard(): array
+    {
+        return [
+            'name' => $this->name,
+            'facility' => $this->facility?->name,
+            'type' => $this->type->value,
+            'type_label' => $this->type->label(),
+            'icon' => $this->type->icon(),
+            'access' => $this->access->value,
+            'access_label' => $this->access->label(),
+            'has_issue' => ($this->open_reports_count ?? 0) > 0,
+            'photos' => array_map(
+                fn (string $path) => Storage::disk('public')->url($path),
+                $this->gallery ?? [],
+            ),
+            'lat' => $this->latitude(),
+            'lng' => $this->longitude(),
+            'url' => route('tereni.court', $this),
+        ];
     }
 }

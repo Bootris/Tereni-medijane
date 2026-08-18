@@ -58,6 +58,42 @@ class TereniTest extends TestCase
             ->assertSee('Prijavi problem');
     }
 
+    public function test_courts_directory_paginates_and_is_linked_from_map(): void
+    {
+        for ($i = 1; $i <= 15; $i++) {
+            $this->court(['name' => sprintf('Teren %02d', $i)]);
+        }
+
+        $this->get(route('tereni.list'))
+            ->assertOk()
+            ->assertSee('Teren 01')
+            ->assertDontSee('Teren 13')
+            ->assertSee('page=2');
+
+        $this->get(route('tereni.list', ['page' => 2]))
+            ->assertOk()
+            ->assertSee('Teren 13')
+            ->assertDontSee('Teren 01');
+
+        $this->get(route('tereni.map'))->assertOk()->assertSee(route('tereni.list'));
+    }
+
+    public function test_courts_directory_filters_by_sport_and_state(): void
+    {
+        $basket = $this->court(['name' => 'Filtrirani koš', 'type' => 'kosarka']);
+        $this->court(['name' => 'Filtrirana odbojka', 'type' => 'odbojka']);
+        $this->publicReport($basket);
+
+        $this->get(route('tereni.list', ['sport' => 'kosarka']))
+            ->assertOk()->assertSee('Filtrirani koš')->assertDontSee('Filtrirana odbojka');
+
+        $this->get(route('tereni.list', ['stanje' => 'issue']))
+            ->assertOk()->assertSee('Filtrirani koš')->assertDontSee('Filtrirana odbojka');
+
+        $this->get(route('tereni.list', ['stanje' => 'ok']))
+            ->assertOk()->assertSee('Filtrirana odbojka')->assertDontSee('Filtrirani koš');
+    }
+
     public function test_inactive_court_returns_404(): void
     {
         $court = $this->court(['is_active' => false]);

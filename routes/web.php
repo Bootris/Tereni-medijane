@@ -24,6 +24,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 */
 if (config('site.features.tereni')) {
     Route::get('/mapa', [TereniMapController::class, 'index'])->name('tereni.map');
+    Route::get('/tereni', [TereniCourtController::class, 'index'])->name('tereni.list');
     Route::get('/teren/{court}', [TereniCourtController::class, 'show'])->name('tereni.court');
     Route::get('/teren/{court}/qr.svg', [TereniQrController::class, 'show'])->name('tereni.court.qr');
 

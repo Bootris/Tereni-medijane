@@ -5,49 +5,67 @@
     </x-slot:head>
 
     <x-slot:styles>
+        .hero h1 { margin:.15rem 0 .45rem; font-size:clamp(1.9rem,5vw,2.6rem); }
+        .hero p { margin:.55rem 0 0; max-width:54ch; }
         .court-marker { display:flex; align-items:center; justify-content:center;
             width:34px; height:34px; border-radius:999px; background:#fff;
-            border:2px solid var(--brand-dark); font-size:17px;
+            border:2px solid var(--asfalt); font-size:17px;
             box-shadow:0 2px 6px rgba(0,0,0,.25); }
-        .court-marker.has-issue { border-color:#dc2626; box-shadow:0 0 0 3px rgba(220,38,38,.25); }
+        .court-marker.has-issue { border-color:var(--crveno); box-shadow:0 0 0 3px rgba(205,64,52,.25); }
         .court-marker.has-issue::after { content:'!'; position:absolute; top:-6px; right:-4px;
-            width:15px; height:15px; border-radius:999px; background:#dc2626; color:#fff;
-            font:700 11px/15px Inter,sans-serif; text-align:center; }
-        .filters { display:flex; flex-wrap:wrap; gap:.5rem; margin:.9rem 0 .6rem; align-items:center; }
-        .filters input[type=search], .filters select { width:auto; min-width:9.5rem; padding:.45rem .6rem; font-size:.9rem; }
-        .filters input[type=search] { flex:1 1 12rem; }
-        .stats { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; }
-        .stats .stat { flex:1 1 10rem; padding:.7rem .9rem; text-align:center; }
-        .stats .stat strong { display:block; font-size:1.35rem; color:var(--brand-dark); }
-        .stats .stat span { font-size:.78rem; }
-        .court-card { padding:.85rem 1rem; cursor:pointer; }
-        .court-card:hover { border-color:var(--brand); }
-        .issue-flag { color:#b91c1c; font-size:.78rem; font-weight:600; }
+            width:15px; height:15px; border-radius:999px; background:var(--crveno); color:#fff;
+            font:700 11px/15px 'Barlow',sans-serif; text-align:center; }
+        .leaflet-container, .leaflet-popup-content { font-family:'Barlow',sans-serif; }
+        .leaflet-popup-content-wrapper { border-radius:.7rem; }
+        .leaflet-popup-content img.popup-photo { width:100%; height:120px; object-fit:cover;
+            border-radius:.4rem; display:block; margin:.4rem 0 .3rem; }
+        .issue-flag { display:inline-block; margin-top:.5rem; background:#f9e2de; color:#9c2c20;
+            font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.8rem;
+            letter-spacing:.06em; text-transform:uppercase; padding:.1rem .55rem; border-radius:999px; }
+        .semafor { margin-top:1.8rem; background:var(--asfalt); border-radius:.9rem;
+            color:var(--linija); padding:1.05rem 1.25rem 1.2rem; }
+        .semafor .eyebrow { color:var(--linija); opacity:.6; }
+        .s-grid { display:flex; flex-wrap:wrap; margin-top:.5rem; }
+        .s-item { flex:1 1 9rem; padding:.35rem 1rem .4rem; text-align:center;
+            border-left:2px dashed rgba(245,242,232,.22); }
+        .s-item:first-child { border-left:0; padding-left:0; }
+        .s-item strong { display:block; font-family:'Anton',sans-serif; font-weight:400;
+            font-size:2.35rem; line-height:1.15; letter-spacing:.02em; }
+        .s-item span { font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:.78rem;
+            letter-spacing:.12em; text-transform:uppercase; opacity:.72; }
+        .s-item.s-open strong { color:var(--signal); }
+        @media (max-width:640px) {
+            .s-grid { display:grid; grid-template-columns:1fr 1fr; gap:.7rem .5rem; }
+            .s-item { border-left:0; padding:0; }
+        }
     </x-slot:styles>
 
-    <h1 style="margin:.2rem 0 .3rem;font-size:1.6rem">Tereni u Medijani</h1>
-    <p class="muted" style="margin-top:0">
-        Klikni teren na mapi da vidiš detalje i prijaviš problem (koš, mreža, podloga, osvetljenje, ograda, smeće).
-    </p>
+    <div class="hero">
+        <span class="eyebrow">Javna mapa terena</span>
+        <h1 class="display rule">Tereni u Medijani</h1>
+        <p class="muted">
+            Klikni teren na mapi da vidiš detalje i prijaviš problem (koš, mreža, podloga, osvetljenje, ograda, smeće).
+        </p>
+    </div>
 
-    {{-- Filters + search — client-side over the same dataset the map uses. --}}
+    {{-- Filters + search — client-side over the same dataset the map uses.
+         Tap chips instead of native selects: no dropdown, phone-friendly. --}}
     <div class="filters">
         <input id="f-search" type="search" placeholder="Pretraga: teren, škola, naselje…" aria-label="Pretraga terena">
-        <select id="f-type" aria-label="Tip sporta">
-            <option value="">Svi sportovi</option>
-            @foreach ($types as $value => $label)
-                <option value="{{ $value }}">{{ $label }}</option>
-            @endforeach
-        </select>
-        <select id="f-state" aria-label="Stanje terena">
-            <option value="">Svi tereni</option>
-            <option value="ok">Bez prijavljenih problema</option>
-            <option value="issue">Sa prijavljenim problemom</option>
-        </select>
-        <label style="display:flex;align-items:center;gap:.35rem;font-weight:400;font-size:.9rem;margin:0">
-            <input id="f-public" type="checkbox" style="width:auto"> samo javno dostupni
-        </label>
         <button id="btn-locate" type="button" class="btn btn-ghost" style="font-size:.85rem;padding:.45rem .8rem">📍 Moja lokacija</button>
+    </div>
+    <div class="chips" role="group" aria-label="Tip sporta">
+        <button type="button" class="chip active" data-group="type" data-value="" aria-pressed="true">Svi sportovi</button>
+        @foreach ($types as $t)
+            <button type="button" class="chip" data-group="type" data-value="{{ $t['value'] }}" aria-pressed="false">{{ $t['icon'] }} {{ $t['label'] }}</button>
+        @endforeach
+    </div>
+    <div class="chips" role="group" aria-label="Stanje i dostupnost terena">
+        <button type="button" class="chip active" data-group="state" data-value="" aria-pressed="true">Svi tereni</button>
+        <button type="button" class="chip" data-group="state" data-value="ok" aria-pressed="false">Bez prijava</button>
+        <button type="button" class="chip" data-group="state" data-value="issue" aria-pressed="false">⚠ Sa problemom</button>
+        <span class="chip-sep" aria-hidden="true"></span>
+        <button type="button" class="chip" data-group="pub" aria-pressed="false">Samo javno dostupni</button>
     </div>
 
     <div id="map" class="card" style="height:520px;margin-top:.4rem;overflow:hidden"></div>
@@ -55,40 +73,36 @@
     @if ($courts->isEmpty())
         <p class="muted" style="margin-top:1rem">Još nema unetih terena na mapi.</p>
     @else
-        {{-- No-JS / SEO fallback: the same fields as a plain list. Cards are
-             wired to the map — click centers and opens the marker popup. --}}
-        <h2 style="font-size:1.15rem;margin:1.5rem 0 .5rem">Svi tereni <span id="count" class="muted" style="font-weight:400;font-size:.85rem"></span></h2>
-        <ul id="court-list" style="list-style:none;padding:0;margin:0;display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
-            @foreach ($courts as $i => $court)
-                <li class="card court-card" data-idx="{{ $i }}"
-                    data-type="{{ $court['type'] }}" data-access="{{ $court['access'] }}"
-                    data-issue="{{ $court['has_issue'] ? 1 : 0 }}"
-                    data-text="{{ mb_strtolower($court['name'].' '.($court['facility'] ?? '')) }}">
-                    <a href="{{ $court['url'] }}" style="font-weight:600;text-decoration:none">{{ $court['icon'] }} {{ $court['name'] }}</a>
-                    <div class="muted" style="font-size:.85rem">
-                        @if ($court['facility']){{ $court['facility'] }} · @endif{{ $court['type_label'] }} · {{ $court['access_label'] }}
-                    </div>
-                    @if ($court['has_issue'])
-                        <div class="issue-flag">⚠ prijavljen problem</div>
-                    @endif
-                </li>
+        {{-- First few fields as cards; the full directory lives at /tereni.
+             Cards are wired to the map — click centers and opens the popup. --}}
+        <h2 class="section-title rule" style="margin:1.8rem 0 .8rem">Tereni <span id="count" class="muted" style="font-family:'Barlow',sans-serif;font-weight:500;font-size:.85rem;letter-spacing:0;text-transform:none"></span></h2>
+        <ul id="court-list" class="court-grid">
+            @foreach ($courts->take(6) as $i => $court)
+                <x-tereni.court-card :court="$court" :idx="$i" />
             @endforeach
         </ul>
+        <p style="text-align:center;margin:1.3rem 0 0">
+            <a href="{{ route('tereni.list') }}" class="btn btn-ghost">Pogledaj sve terene ({{ $courts->count() }}) →</a>
+        </p>
     @endif
 
-    {{-- Civic-tech stats bar: visible effect motivates reporting. --}}
+    {{-- The scoreboard — visible effect motivates reporting. --}}
     @if (($stats['resolved_total'] ?? 0) > 0 || ($stats['open'] ?? 0) > 0)
-        <div class="stats">
-            <div class="card stat"><strong>{{ $stats['resolved_total'] }}</strong><span class="muted">rešenih problema ukupno</span></div>
-            <div class="card stat"><strong>{{ $stats['resolved_month'] }}</strong><span class="muted">rešeno ovog meseca</span></div>
-            @if ($stats['avg_days'] !== null)
-                <div class="card stat"><strong>{{ str_replace('.', ',', (string) $stats['avg_days']) }}</strong><span class="muted">dana prosečno do rešenja</span></div>
-            @endif
-            <div class="card stat"><strong>{{ $stats['open'] }}</strong><span class="muted">trenutno otvorenih prijava</span></div>
-        </div>
+        <section class="semafor" aria-label="Stanje prijava">
+            <span class="eyebrow">Semafor</span>
+            <div class="s-grid">
+                <div class="s-item"><strong>{{ $stats['resolved_total'] }}</strong><span>rešenih problema ukupno</span></div>
+                <div class="s-item"><strong>{{ $stats['resolved_month'] }}</strong><span>rešeno ovog meseca</span></div>
+                @if ($stats['avg_days'] !== null)
+                    <div class="s-item"><strong>{{ str_replace('.', ',', (string) $stats['avg_days']) }}</strong><span>dana prosečno do rešenja</span></div>
+                @endif
+                <div class="s-item s-open"><strong>{{ $stats['open'] }}</strong><span>trenutno otvorenih prijava</span></div>
+            </div>
+        </section>
     @endif
 
     <x-slot:scripts>
+        <x-tereni.gallery-lightbox />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script>
@@ -118,27 +132,26 @@
                 m.bindPopup(
                     '<strong>' + escapeHtml(c.icon + ' ' + c.name) + '</strong><br>' +
                     (c.facility ? escapeHtml(c.facility) + '<br>' : '') +
+                    (c.photos.length ? '<img class="popup-photo popup-photo-open" data-idx="' + i + '" src="' + escapeHtml(c.photos[0]) + '" alt="">' : '') +
                     '<span style="color:#6b7280">' + escapeHtml(c.type_label) + ' · ' + escapeHtml(c.access_label) + '</span><br>' +
                     (c.has_issue ? '<span style="color:#b91c1c;font-weight:600">⚠ prijavljen problem</span><br>' : '') +
                     '<a href="' + c.url + '">Detalji i prijava →</a>'
-                );
+                , { minWidth: 220 });
                 markers.push(m);
             });
 
             // Filters drive both the markers and the card list below.
             const els = {
                 search: document.getElementById('f-search'),
-                type: document.getElementById('f-type'),
-                state: document.getElementById('f-state'),
-                pub: document.getElementById('f-public'),
                 count: document.getElementById('count'),
             };
+            const filter = { type: '', state: '', pub: false };
 
             function matches(c) {
-                if (els.type.value && c.type !== els.type.value) return false;
-                if (els.state.value === 'ok' && c.has_issue) return false;
-                if (els.state.value === 'issue' && !c.has_issue) return false;
-                if (els.pub.checked && c.access !== 'javno') return false;
+                if (filter.type && c.type !== filter.type) return false;
+                if (filter.state === 'ok' && c.has_issue) return false;
+                if (filter.state === 'issue' && !c.has_issue) return false;
+                if (filter.pub && c.access !== 'javno') return false;
                 const q = els.search.value.trim().toLowerCase();
                 if (q && !((c.name + ' ' + (c.facility || '')).toLowerCase().includes(q))) return false;
                 return true;
@@ -164,13 +177,37 @@
                 }
             }
 
-            ['input', 'change'].forEach((evt) => {
-                els.search.addEventListener(evt, apply);
-                els.type.addEventListener(evt, apply);
-                els.state.addEventListener(evt, apply);
-                els.pub.addEventListener(evt, apply);
+            document.querySelectorAll('.chip[data-group]').forEach((chip) => {
+                chip.addEventListener('click', () => {
+                    const group = chip.dataset.group;
+                    if (group === 'pub') {
+                        filter.pub = !filter.pub;
+                        chip.classList.toggle('active', filter.pub);
+                        chip.setAttribute('aria-pressed', String(filter.pub));
+                    } else {
+                        filter[group] = chip.dataset.value;
+                        document.querySelectorAll('.chip[data-group="' + group + '"]').forEach((c) => {
+                            const on = c === chip;
+                            c.classList.toggle('active', on);
+                            c.setAttribute('aria-pressed', String(on));
+                        });
+                    }
+                    apply();
+                });
             });
+            ['input', 'change'].forEach((evt) => els.search.addEventListener(evt, apply));
             apply();
+
+            // Popup photo → fullscreen gallery (card covers bind themselves).
+            map.on('popupopen', (e) => {
+                const photo = e.popup.getElement().querySelector('.popup-photo-open');
+                if (!photo) return;
+                photo.style.cursor = 'zoom-in';
+                photo.addEventListener('click', () => {
+                    const c = courts[Number(photo.dataset.idx)];
+                    window.tereniGallery.open(c.photos, 0, c.icon + ' ' + c.name);
+                });
+            });
 
             // Card click → center the map on that court and open its popup
             // (links inside the card still navigate normally).
