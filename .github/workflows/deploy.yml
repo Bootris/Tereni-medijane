@@ -1,0 +1,68 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Nikad dva deploya odjednom; novi ceka da se stari zavrsi.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: rsync + redeploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Rsync kod na server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          rsync -rlptz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            --exclude '/.git' \
+            --exclude '/.github' \
+            --exclude '/node_modules' \
+            --exclude '/vendor' \
+            --exclude '/.env' \
+            --exclude '/.env.*' \
+            --exclude '/storage' \
+            --exclude '/bootstrap/cache' \
+            --exclude '/public/build' \
+            --exclude '/public/storage' \
+            --exclude '/public/hot' \
+            --exclude '/database/database.sqlite' \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Rebuild (composer, npm, migracije, cache)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" "bash '$DEPLOY_PATH/bin/deploy-production.sh'"
+
+      - name: Smoke test
+        env:
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+        run: |
+          code=$(curl -sSL -o /dev/null -w '%{http_code}' --max-time 30 "$DEPLOY_URL")
+          echo "GET $DEPLOY_URL (uz redirect) -> $code"
+          [ "$code" = 200 ]
