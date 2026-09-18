@@ -38,6 +38,20 @@ ssh-keyscan -H <host>           # -> DEPLOY_KNOWN_HOSTS
 Javni deo (`~/.ssh/tereni_deploy.pub`) ide u `~/.ssh/authorized_keys` naloga
 `DEPLOY_USER` na serveru.
 
+Brze, preko `gh` CLI-ja iz korena repoa:
+
+```bash
+gh secret set DEPLOY_HOST        --body '1.2.3.4'
+gh secret set DEPLOY_USER        --body 'root'
+gh secret set DEPLOY_PATH        --body '/var/www/tereni.example.rs'
+gh secret set DEPLOY_URL         --body 'https://tereni.example.rs'
+gh secret set DEPLOY_SSH_KEY     < ~/.ssh/tereni_deploy
+ssh-keyscan -H 1.2.3.4 | gh secret set DEPLOY_KNOWN_HOSTS
+gh secret list                   # provera: svih 6
+```
+
+Repo je javan, pa server podaci smeju samo ovde — nikad u kod.
+
 ## Prvi deploy — sta mora da postoji na serveru
 
 ```bash
