@@ -20,6 +20,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Provera secreta
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+        run: |
+          # Bez ovoga bi prazan DEPLOY_PATH poslao rsync --delete na home dir servera.
+          missing=""
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_PATH DEPLOY_URL; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Nedostaju repo secrets:$missing (Settings -> Secrets and variables -> Actions)"
+            exit 1
+          fi
+          case "$DEPLOY_PATH" in
+            /*/?*) ;;
+            *) echo "::error::DEPLOY_PATH mora biti apsolutna putanja dublja od korena, npr. /var/www/tereni.example.rs"; exit 1 ;;
+          esac
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
