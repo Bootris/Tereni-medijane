@@ -88,8 +88,35 @@ class GoogleMapsLocationTest extends TestCase
         );
     }
 
-    public function test_place_id_only_link_reads_coordinates_from_page(): void
+    public function test_share_google_link_resolves_via_street_view_panorama(): void
     {
+        // share.google → Google Search entity page (JS-only, no coordinates);
+        // the crawler preview exposes the Street View pano in front of the place.
+        Http::fake([
+            'share.google/*' => Http::response('', 302, [
+                'Location' => 'https://www.google.com/share.google?q=Wb6MNjlONGZicgZMv',
+            ]),
+            'www.google.com/share.google*' => Http::response('', 301, [
+                'Location' => 'https://www.google.com/search?output=search&kgmid=/g/11z8m257ns&q=Kosarkaski+teren',
+            ]),
+            'www.google.com/search*' => Http::response(
+                '<meta content="https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=aHxhHv_tQveWumePtXO3zQ&yaw=34.2" property="og:image">'
+            ),
+            'www.google.com/maps/photometa/*' => Http::response(
+                ")]}'\n[[],[[[2],[[null,null,43.31745690249124,21.92143228387344],[196.7]],[[null,null,43.31750274118749,21.9214702042225]]]]]"
+            ),
+        ]);
+
+        $this->assertSame(
+            ['lat' => 43.3174569, 'lng' => 21.9214323, 'approx' => true],
+            GoogleMapsLocation::parse("Kosarkaski teren\nhttps://share.google/Wb6MNjlONGZicgZMv")
+        );
+    }
+
+    public function test_place_id_only_link_never_uses_page_viewport(): void
+    {
+        // The plain-HTTP Maps page centres its map on the *client's* IP, not
+        // the place — those coordinates must never be mistaken for the pin.
         Http::fake([
             'maps.app.goo.gl/*' => Http::response('', 302, [
                 'Location' => 'https://www.google.com/maps/place/Kocka/data=!4m2!3m1!1s0x4755b0b3a4:0x9f?entry=tts',
@@ -99,10 +126,7 @@ class GoogleMapsLocationTest extends TestCase
             ),
         ]);
 
-        $this->assertSame(
-            ['lat' => 43.3147738, 'lng' => 21.89862895],
-            GoogleMapsLocation::parse('https://maps.app.goo.gl/AbCdEf123')
-        );
+        $this->assertNull(GoogleMapsLocation::parse('https://maps.app.goo.gl/AbCdEf123'));
     }
 
     public function test_parses_dropped_pin_search_url_and_dms(): void
@@ -124,7 +148,7 @@ class GoogleMapsLocationTest extends TestCase
         ]);
 
         $this->assertNull(GoogleMapsLocation::parse('https://maps.app.goo.gl/AbCdEf123'));
-        Http::assertSentCount(1);
+        Http::assertNotSent(fn ($request) => str_contains($request->url(), '169.254.169.254'));
     }
 
     public function test_rejects_garbage_and_out_of_range(): void

@@ -2,6 +2,7 @@
 
 namespace App\Support\Tereni;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -9,22 +10,36 @@ use Illuminate\Support\Facades\Log;
  * Pulls coordinates out of whatever gets pasted from Google Maps:
  * bare coordinates ("43.3209, 21.9033" or 43°19'15.2"N 21°54'11.9"E), a full
  * maps URL (@lat,lng / !3dlat!4dlng / ?q=lat,lng / /search/lat,+lng), or a
- * maps.app.goo.gl share link — possibly with the place name pasted above it.
- * Links whose URL carries no coordinates (place-id only) are fetched and the
- * point is read from the page itself.
+ * share link (maps.app.goo.gl, share.google) — possibly with the place name
+ * pasted above it.
+ *
+ * Share links are followed hop by hop, since Google puts the coordinates in a
+ * redirect target when it puts them anywhere. A link that only names the
+ * place (share.google from Google Search, place-id-only maps links) renders
+ * its location with JavaScript alone — no plain HTTP page carries it. For
+ * those, the link-preview page Google serves to crawlers exposes the Street
+ * View panorama in front of the place, whose position is an approximate
+ * (street-side) location; the result is flagged `approx`.
  */
 class GoogleMapsLocation
 {
-    private const SHORT_LINK_HOSTS = ['maps.app.goo.gl', 'goo.gl', 'g.co'];
+    private const SHORT_LINK_HOSTS = ['maps.app.goo.gl', 'goo.gl', 'g.co', 'share.google'];
 
-    /** Sent on every fetch: a browser UA plus a pre-accepted EU consent cookie. */
-    private const HEADERS = [
+    /** A browser UA plus a pre-accepted EU consent cookie. */
+    private const BROWSER_HEADERS = [
         'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36',
         'Accept-Language' => 'sr,en;q=0.8',
         'Cookie' => 'SOCS=CAESEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg; CONSENT=YES+',
     ];
 
-    /** @return array{lat: float, lng: float}|null */
+    /** Link-preview crawler: gets the og:* page instead of the JS app shell. */
+    private const CRAWLER_HEADERS = [
+        'User-Agent' => 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+        'Accept-Language' => 'sr,en;q=0.8',
+        'Cookie' => 'SOCS=CAESEwgDEgk0ODE3Nzk3MjQaAmVuIAEaBgiA_LyaBg; CONSENT=YES+',
+    ];
+
+    /** @return array{lat: float, lng: float, approx?: bool}|null */
     public static function parse(?string $input): ?array
     {
         $input = trim((string) $input);
@@ -92,7 +107,7 @@ class GoogleMapsLocation
     }
 
     /** @return array{lat: float, lng: float}|null */
-    private static function valid($lat, $lng): ?array
+    private static function valid(string|float $lat, string|float $lng): ?array
     {
         $lat = (float) $lat;
         $lng = (float) $lng;
@@ -100,13 +115,7 @@ class GoogleMapsLocation
         return abs($lat) <= 90 && abs($lng) <= 180 ? ['lat' => $lat, 'lng' => $lng] : null;
     }
 
-    /**
-     * Follow a Google link hop by hop (every intermediate URL is parsed — the
-     * coordinates usually sit in a redirect target), then read the final page:
-     * its preview image is centered on the place ("center=lat%2Clng").
-     *
-     * @return array{lat: float, lng: float}|null
-     */
+    /** @return array{lat: float, lng: float, approx?: bool}|null */
     private static function resolve(string $url): ?array
     {
         if (! self::isGoogleHost(parse_url($url, PHP_URL_HOST))) {
@@ -119,43 +128,19 @@ class GoogleMapsLocation
         $error = null;
 
         try {
-            for ($hop = 0; $hop < 6; $hop++) {
-                $response = Http::timeout(8)
-                    ->withHeaders(self::HEADERS)
-                    ->withOptions(['allow_redirects' => false])
-                    ->get($url);
-
-                $next = $response->header('Location');
-                $trace[] = $response->status() . ' ' . $url . ($next ? ' -> ' . $next : '');
-
-                if (! $next) {
-                    if ($coords = self::extractFromPage($response->body())) {
-                        return $coords;
-                    }
-                    $trace[] = 'page without coordinates: ' . mb_substr(strip_tags($response->body()), 0, 200);
-                    break;
-                }
-
-                if (str_starts_with($next, '/')) {
-                    $next = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST) . $next;
-                }
-                if ($coords = self::extract($next)) {
-                    return $coords;
-                }
-
-                // Consent interstitial: skip straight to the page it guards.
-                parse_str((string) parse_url($next, PHP_URL_QUERY), $query);
-                if (! empty($query['continue']) && is_string($query['continue'])) {
-                    $next = $query['continue'];
-                }
-
-                // Never follow a redirect off Google (no SSRF via crafted links).
-                if (! self::isGoogleHost(parse_url($next, PHP_URL_HOST))) {
-                    $trace[] = 'refused non-Google redirect';
-                    break;
-                }
-                $url = $next;
+            // 1. As a browser: coordinates usually sit in a redirect target.
+            if ($coords = self::follow($url, self::BROWSER_HEADERS, $trace)['coords']) {
+                return $coords;
             }
+
+            // 2. As a link-preview crawler: the og:image is the Street View
+            //    panorama in front of the place — its position is close enough
+            //    to flag as approximate.
+            $page = self::follow($url, self::CRAWLER_HEADERS, $trace)['body'] ?? '';
+            if (preg_match('/panoid=([\w-]+)/', $page, $m) && ($coords = self::panoramaLocation($m[1]))) {
+                return $coords + ['approx' => true];
+            }
+            $trace[] = 'no coordinates and no panorama in preview page';
         } catch (\Throwable $e) {
             // Network failure just means "couldn't read the link".
             $error = $e->getMessage();
@@ -169,18 +154,69 @@ class GoogleMapsLocation
         return null;
     }
 
-    /** @return array{lat: float, lng: float}|null */
-    private static function extractFromPage(string $html): ?array
+    /**
+     * Follow redirects by hand, parsing each Location for coordinates and
+     * never leaving Google (no SSRF via a crafted link).
+     *
+     * @return array{coords: ?array, body: ?string}
+     */
+    private static function follow(string $url, array $headers, array &$trace): array
     {
-        if (preg_match('/center=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/i', $html, $m)) {
-            return self::valid($m[1], $m[2]);
-        }
-        // APP_INITIALIZATION_STATE=[[[zoom, lng, lat] — note the lng-first order.
-        if (preg_match('/APP_INITIALIZATION_STATE=\[\[\[[-\d.]+,(-?\d+\.\d+),(-?\d+\.\d+)\]/', $html, $m)) {
-            return self::valid($m[2], $m[1]);
+        for ($hop = 0; $hop < 6; $hop++) {
+            /** @var Response $response */
+            $response = Http::timeout(8)
+                ->withHeaders($headers)
+                ->withOptions(['allow_redirects' => false])
+                ->get($url);
+
+            $next = $response->header('Location');
+            $trace[] = $response->status() . ' ' . $url . ($next ? ' -> ' . $next : '');
+
+            if (! $next) {
+                return ['coords' => null, 'body' => $response->body()];
+            }
+
+            if (str_starts_with($next, '/')) {
+                $next = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST) . $next;
+            }
+            if ($coords = self::extract($next)) {
+                return ['coords' => $coords, 'body' => null];
+            }
+
+            // Consent interstitial: skip straight to the page it guards.
+            parse_str((string) parse_url($next, PHP_URL_QUERY), $query);
+            if (! empty($query['continue']) && is_string($query['continue'])) {
+                $next = $query['continue'];
+            }
+
+            if (! self::isGoogleHost(parse_url($next, PHP_URL_HOST))) {
+                $trace[] = 'refused non-Google redirect';
+                break;
+            }
+            $url = $next;
         }
 
-        return null;
+        return ['coords' => null, 'body' => null];
+    }
+
+    /** Position of a Street View panorama, via the endpoint the Maps UI itself uses. */
+    private static function panoramaLocation(string $panoid): ?array
+    {
+        $body = Http::timeout(8)
+            ->withHeaders(self::BROWSER_HEADERS)
+            ->get('https://www.google.com/maps/photometa/v1', [
+                'authuser' => 0,
+                'hl' => 'en',
+                'gl' => 'us',
+                'pb' => "!1m4!1smaps_sv.tactile!11m2!2m1!1b1!2m2!1sen!2sus!3m3!1m2!1e2!2s{$panoid}!4m6!1e1!1e2!1e3!1e4!1e5!1e6",
+            ])
+            ->body();
+
+        // The panorama's own position is the first [null,null,lat,lng] tuple;
+        // neighbouring panoramas follow it.
+        return preg_match('/\[null,null,(-?\d+\.\d+),(-?\d+\.\d+)\]/', $body, $m)
+            ? self::valid(round((float) $m[1], 7), round((float) $m[2], 7))
+            : null;
     }
 
     private static function isGoogleHost(?string $host): bool
@@ -188,6 +224,7 @@ class GoogleMapsLocation
         $host = strtolower((string) $host);
 
         return in_array($host, self::SHORT_LINK_HOSTS, true)
-            || (bool) preg_match('/(^|\.)google\.(com|[a-z]{2}|co\.[a-z]{2}|com\.[a-z]{2})$/', $host);
+            || (bool) preg_match('/(^|\.)google\.(com|[a-z]{2}|co\.[a-z]{2}|com\.[a-z]{2})$/', $host)
+            || (bool) preg_match('/(^|\.)google$/', $host);
     }
 }

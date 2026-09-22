@@ -20,7 +20,7 @@ class MapsLinkInput
             ->placeholder('Nalepi „Deli" link ili koordinate…')
             ->dehydrated(false)
             ->live(onBlur: true)
-            ->helperText('Radi sa linkom iz „Deli/Share" opcije, punim URL-om ili koordinatama „43.3209, 21.9033" — lat/lng se popune sami.')
+            ->helperText('Najtačnije: na telefonu zadrži prst na terenu i kopiraj koordinate sa vrha ekrana; na računaru desni klik na teren → koordinate. Radi i sa „Deli" linkom (share.google daje približnu tačku sa ulice).')
             ->afterStateUpdated(function (?string $state, callable $set) {
                 if (blank($state)) {
                     return;
@@ -30,19 +30,25 @@ class MapsLinkInput
                     $set('lat', (string) $coords['lat']);
                     $set('lng', (string) $coords['lng']);
                     $set('maps_link', null);
+
+                    $approx = ! empty($coords['approx']);
                     Notification::make()
-                        ->title('Lokacija preuzeta')
-                        ->body($coords['lat'] . ', ' . $coords['lng'])
-                        ->success()
+                        ->title($approx ? 'Lokacija preuzeta (približno)' : 'Lokacija preuzeta')
+                        ->body($approx
+                            ? 'Ovaj link ne nosi tačne koordinate — uzeta je tačka sa ulice ispred mesta (' . $coords['lat'] . ', ' . $coords['lng'] . '). Proveri na mapi i po potrebi ispravi lat/lng.'
+                            : $coords['lat'] . ', ' . $coords['lng'])
+                        ->{$approx ? 'warning' : 'success'}()
+                        ->persistent()
                         ->send();
 
                     return;
                 }
 
                 Notification::make()
-                    ->title('Ne mogu da pročitam lokaciju')
-                    ->body('Nalepi link iz Google Maps „Deli" opcije ili koordinate u formatu 43.3209, 21.9033.')
+                    ->title('Ne mogu da pročitam lokaciju iz ovog linka')
+                    ->body('Najsigurnije je kopirati koordinate: na telefonu zadrži prst na terenu u Google Maps i tapni koordinate na vrhu ekrana; na računaru desni klik na teren → prva stavka. Nalepi ih ovde u obliku 43.3209, 21.9033.')
                     ->danger()
+                    ->persistent()
                     ->send();
             });
     }
