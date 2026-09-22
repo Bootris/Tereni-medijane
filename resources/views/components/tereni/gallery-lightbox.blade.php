@@ -1,8 +1,10 @@
 {{-- Fullscreen photo viewer shared by the map cards and the court gallery.
      Arrows + keyboard ←/→ + touch swipe; Esc/backdrop/✕ closes.
      Pages open it via window.tereniGallery.open(urls, startIndex, title). --}}
+{{-- z-index above Leaflet's panes/controls (they go up to 1000 and the map
+     container doesn't create a stacking context, so they'd bleed through). --}}
 <div id="glb" role="dialog" aria-modal="true" aria-label="Pregled fotografija terena"
-    style="display:none;position:fixed;inset:0;z-index:70;background:rgba(15,23,42,.92);align-items:center;justify-content:center;padding:1rem">
+    style="display:none;position:fixed;inset:0;z-index:1200;background:rgba(15,23,42,.92);align-items:center;justify-content:center;padding:1rem">
     <figure style="margin:0;width:min(960px,94vw);display:flex;flex-direction:column;gap:.55rem">
         <img id="glb-img" src="" alt="Fotografija terena"
             style="width:100%;max-height:78vh;object-fit:contain;border-radius:.6rem;background:#0f172a">

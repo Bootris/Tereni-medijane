@@ -74,8 +74,10 @@
             line-height: 1; letter-spacing: .04em; text-transform: uppercase; }
         .brand small { display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
             font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; opacity: .68; margin-top: .32rem; }
-        nav.top a { margin-left: 1.25rem; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-            font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+        nav.top { display: flex; gap: 1.25rem; flex: 0 0 auto; }
+        nav.top a { font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+            font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85;
+            white-space: nowrap; }
         nav.top a:hover { opacity: 1; }
 
         /* Painted court markings, drawn in on load. */
@@ -162,6 +164,14 @@
         footer.site { background: var(--asfalt); color: var(--linija);
             border-top: 4px solid var(--teren); font-size: .84rem; }
         footer.site .wrap { padding: 1.4rem 1rem; opacity: .8; }
+
+        @media (max-width: 640px) {
+            header.site .wrap { flex-direction: column; align-items: flex-start; gap: .6rem;
+                padding-top: .95rem; padding-bottom: .95rem; }
+            .brand { font-size: 1.35rem; }
+            nav.top { gap: 1.4rem; }
+            main { padding: 1.25rem 0 2.4rem; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }

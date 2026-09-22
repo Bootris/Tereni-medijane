@@ -7,6 +7,22 @@
     <x-slot:styles>
         .hero h1 { margin:.15rem 0 .45rem; font-size:clamp(1.9rem,5vw,2.6rem); }
         .hero p { margin:.55rem 0 0; max-width:54ch; }
+        .hero-meta { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.75rem; }
+        /* Map in a shell: isolation keeps Leaflet's z-indexes (200–1000) from
+           painting over page overlays; the locate button floats on the map. */
+        .map-shell { position:relative; isolation:isolate; overflow:hidden; margin-top:.7rem; }
+        #map { height:clamp(320px, 52vh, 460px); }
+        .btn-locate { position:absolute; right:.65rem; top:.65rem; z-index:1001;
+            display:inline-flex; align-items:center; gap:.35rem;
+            font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.85rem;
+            letter-spacing:.07em; text-transform:uppercase;
+            background:#fff; color:var(--asfalt); border:1.5px solid var(--line);
+            border-radius:999px; padding:.42rem .85rem; cursor:pointer;
+            box-shadow:0 2px 8px rgba(38,43,52,.22); transition:border-color .15s; }
+        .btn-locate:hover { border-color:var(--teren); }
+        @media (max-width:640px) {
+            #map { height:min(58vh, 440px); min-height:330px; }
+        }
         .court-marker { display:flex; align-items:center; justify-content:center;
             width:34px; height:34px; border-radius:999px; background:#fff;
             border:2px solid var(--asfalt); font-size:17px;
@@ -46,13 +62,20 @@
         <p class="muted">
             Klikni teren na mapi da vidiš detalje i prijaviš problem (koš, mreža, podloga, osvetljenje, ograda, smeće).
         </p>
+        <div class="hero-meta">
+            <span class="badge badge-gray">{{ $courts->count() }} terena na mapi</span>
+            @if (($stats['open'] ?? 0) > 0)
+                <span class="badge badge-danger">⚠ {{ $stats['open'] }} otvorenih prijava</span>
+            @elseif ($courts->isNotEmpty())
+                <span class="badge badge-success">Nema otvorenih prijava</span>
+            @endif
+        </div>
     </div>
 
     {{-- Filters + search — client-side over the same dataset the map uses.
          Tap chips instead of native selects: no dropdown, phone-friendly. --}}
     <div class="filters">
         <input id="f-search" type="search" placeholder="Pretraga: teren, škola, naselje…" aria-label="Pretraga terena">
-        <button id="btn-locate" type="button" class="btn btn-ghost" style="font-size:.85rem;padding:.45rem .8rem">📍 Moja lokacija</button>
     </div>
     <div class="chips" role="group" aria-label="Tip sporta">
         <button type="button" class="chip active" data-group="type" data-value="" aria-pressed="true">Svi sportovi</button>
@@ -68,7 +91,10 @@
         <button type="button" class="chip" data-group="pub" aria-pressed="false">Samo javno dostupni</button>
     </div>
 
-    <div id="map" class="card" style="height:520px;margin-top:.4rem;overflow:hidden"></div>
+    <div class="map-shell card">
+        <div id="map" aria-label="Mapa terena"></div>
+        <button id="btn-locate" type="button" class="btn-locate">📍 Moja lokacija</button>
+    </div>
 
     @if ($courts->isEmpty())
         <p class="muted" style="margin-top:1rem">Još nema unetih terena na mapi.</p>
