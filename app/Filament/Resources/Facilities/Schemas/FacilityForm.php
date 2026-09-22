@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Facilities\Schemas;
 
+use App\Filament\Components\MapsLinkInput;
 use App\Models\Facility;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -60,6 +61,7 @@ class FacilityForm
                 Section::make('Lokacija')
                     ->columnSpan(1)
                     ->components([
+                        MapsLinkInput::make(),
                         TextInput::make('lat')
                             ->label('Geo širina (lat)')
                             ->numeric()

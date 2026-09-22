@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Courts\Schemas;
 
 use App\Enums\CourtAccess;
 use App\Enums\CourtType;
+use App\Filament\Components\MapsLinkInput;
 use App\Models\Court;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -89,6 +90,7 @@ class CourtForm
                 Section::make('Lokacija i galerija')
                     ->columnSpan(1)
                     ->components([
+                        MapsLinkInput::make(),
                         TextInput::make('lat')
                             ->label('Geo širina (lat)')
                             ->numeric()
