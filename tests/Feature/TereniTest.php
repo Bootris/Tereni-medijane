@@ -6,6 +6,7 @@ use App\Enums\ReportStatus;
 use App\Mail\ReportStatusChanged;
 use App\Mail\ReportSubmitted;
 use App\Models\Court;
+use App\Models\Facility;
 use App\Models\Report;
 use App\Models\Steward;
 use App\Models\User;
@@ -37,14 +38,24 @@ class TereniTest extends TestCase
         ], $attributes));
     }
 
-    public function test_map_lists_active_locatable_courts(): void
+    public function test_map_lists_every_active_court_even_without_coordinates(): void
     {
-        $court = $this->court(['name' => 'Košarkaški teren A']);
+        $this->court(['name' => 'Košarkaški teren A']);
         $this->court(['name' => 'Skriveni teren', 'is_active' => false]);
+        // No own coords and none on the facility — no marker, but the card
+        // and the totals must still include it.
+        $this->court([
+            'name' => 'Teren bez lokacije',
+            'lat' => null,
+            'lng' => null,
+            'facility_id' => Facility::factory()->create(['lat' => null, 'lng' => null])->id,
+        ]);
 
         $this->get(route('tereni.map'))
             ->assertOk()
             ->assertSee('Košarkaški teren A')
+            ->assertSee('Teren bez lokacije')
+            ->assertSee('Pogledaj sve terene (2)')
             ->assertDontSee('Skriveni teren');
     }
 

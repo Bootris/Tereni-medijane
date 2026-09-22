@@ -63,7 +63,7 @@
             Klikni teren na mapi da vidiš detalje i prijaviš problem (koš, mreža, podloga, osvetljenje, ograda, smeće).
         </p>
         <div class="hero-meta">
-            <span class="badge badge-gray">{{ $courts->count() }} terena na mapi</span>
+            <span class="badge badge-gray">{{ $courts->count() }} terena</span>
             @if (($stats['open'] ?? 0) > 0)
                 <span class="badge badge-danger">⚠ {{ $stats['open'] }} otvorenih prijava</span>
             @elseif ($courts->isNotEmpty())

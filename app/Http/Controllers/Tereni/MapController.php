@@ -7,13 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Court;
 use App\Support\Tereni\TereniStats;
 
-/** Public map of every active, locatable field. */
+/**
+ * Public map of every active field. Fields without coordinates get no
+ * marker (the JS skips null lat/lng) but still show in the card grid
+ * and in the totals, so the landing numbers match the real directory.
+ */
 class MapController extends Controller
 {
     public function index()
     {
         $courts = Court::active()
-            ->locatable()
             ->with('facility')
             ->withCount(['openPublicReports as open_reports_count'])
             ->get()
