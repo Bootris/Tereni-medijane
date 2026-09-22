@@ -64,31 +64,27 @@
         .rule::after { content: ''; display: block; width: 2.7rem; height: .28rem;
             border-radius: 999px; background: var(--teren); margin-top: .4rem; }
 
-        header.site { background: var(--asfalt); color: var(--linija); position: relative; overflow: hidden; }
+        header.site { background: var(--asfalt); color: var(--linija);
+            border-bottom: 3px solid var(--teren); }
         header.site .wrap {
             display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-            padding-top: 1.05rem; padding-bottom: 1.1rem; position: relative; z-index: 1;
+            padding-top: .95rem; padding-bottom: .95rem;
         }
         header.site a { color: inherit; text-decoration: none; }
-        .brand { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 1.5rem;
-            line-height: 1; letter-spacing: .04em; text-transform: uppercase; }
-        .brand small { display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-            font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; opacity: .68; margin-top: .32rem; }
-        nav.top { display: flex; gap: 1.25rem; flex: 0 0 auto; }
-        nav.top a { font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-            font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85;
-            white-space: nowrap; }
+        .brand { display: flex; align-items: center; gap: .65rem; }
+        .brand-mark { flex: 0 0 auto; display: block; color: var(--signal); }
+        .brand-text { font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+            font-size: 1.28rem; line-height: 1; letter-spacing: .13em; text-transform: uppercase; }
+        .brand-text small { display: block; font-weight: 600; font-size: .66rem;
+            letter-spacing: .22em; opacity: .62; margin-top: .3rem; }
+        nav.top { display: flex; gap: 1.4rem; flex: 0 0 auto; }
+        nav.top a { position: relative; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+            font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; opacity: .8;
+            white-space: nowrap; padding: .15rem 0; }
         nav.top a:hover { opacity: 1; }
-
-        /* Painted court markings, drawn in on load. */
-        .court-lines { position: absolute; inset: 0; width: 100%; height: 100%;
-            color: var(--linija); pointer-events: none; }
-        .cl { opacity: .16; stroke-dasharray: 900; stroke-dashoffset: 900;
-            animation: cl-draw 1.5s cubic-bezier(.3,.6,.3,1) forwards; }
-        .cl-2 { animation-delay: .15s; }
-        .cl-3 { animation-delay: .3s; }
-        .cl-4 { animation-delay: .45s; }
-        @keyframes cl-draw { to { stroke-dashoffset: 0; } }
+        nav.top a.active { opacity: 1; }
+        nav.top a.active::after { content: ''; position: absolute; left: 0; right: 0;
+            bottom: -.28rem; height: 3px; border-radius: 999px; background: var(--signal); }
 
         main { padding: 1.6rem 0 3rem; }
         .card { background: var(--card); border: 1px solid var(--line); border-radius: .8rem; }
@@ -168,14 +164,13 @@
         @media (max-width: 640px) {
             header.site .wrap { flex-direction: column; align-items: flex-start; gap: .6rem;
                 padding-top: .95rem; padding-bottom: .95rem; }
-            .brand { font-size: 1.35rem; }
-            nav.top { gap: 1.4rem; }
+            .brand-text { font-size: 1.18rem; }
+            nav.top { gap: 1.5rem; }
             main { padding: 1.25rem 0 2.4rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
-            .cl { stroke-dasharray: none; stroke-dashoffset: 0; }
         }
         {!! $styles ?? '' !!}
     </style>
@@ -185,28 +180,28 @@
     <header class="site">
         <div class="wrap">
             <a href="{{ route('tereni.map') }}" class="brand">
-                Tereni Medijana
-                @if (mb_strtolower($siteName) !== 'tereni medijana')
-                    <small>{{ $siteName }}</small>
-                @else
-                    <small>Gradska opština Medijana</small>
-                @endif
+                {{-- Mini court glyph — same motif as the favicon. --}}
+                <svg class="brand-mark" viewBox="0 0 30 21" width="30" height="21" fill="none" aria-hidden="true">
+                    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <rect x="1.5" y="1.5" width="27" height="18" rx="2.5" />
+                        <line x1="15" y1="1.5" x2="15" y2="19.5" />
+                        <circle cx="15" cy="10.5" r="3.6" />
+                    </g>
+                </svg>
+                <span class="brand-text">
+                    Tereni Medijana
+                    @if (mb_strtolower($siteName) !== 'tereni medijana')
+                        <small>{{ $siteName }}</small>
+                    @else
+                        <small>Gradska opština Medijana</small>
+                    @endif
+                </span>
             </a>
             <nav class="top">
-                <a href="{{ route('tereni.map') }}">Mapa</a>
-                <a href="{{ route('tereni.list') }}">Svi tereni</a>
+                <a href="{{ route('tereni.map') }}" @class(['active' => request()->routeIs('tereni.map')])>Mapa</a>
+                <a href="{{ route('tereni.list') }}" @class(['active' => request()->routeIs('tereni.list')])>Svi tereni</a>
             </nav>
         </div>
-        {{-- A court seen from above, cropped to the band: center circle,
-             halfway line, both keys with free-throw arcs. --}}
-        <svg class="court-lines" viewBox="0 0 900 120" fill="none" aria-hidden="true" preserveAspectRatio="none">
-            <g stroke="currentColor" stroke-width="2.5">
-                <line class="cl cl-1" x1="562" y1="-10" x2="562" y2="130" vector-effect="non-scaling-stroke" />
-                <circle class="cl cl-2" cx="562" cy="60" r="72" vector-effect="non-scaling-stroke" />
-                <path class="cl cl-3" d="M900 -14 H760 V134 H900 M760 22 A 48 48 0 0 0 760 98" vector-effect="non-scaling-stroke" />
-                <path class="cl cl-4" d="M224 -14 H364 V134 H224 M364 22 A 48 48 0 0 1 364 98" vector-effect="non-scaling-stroke" />
-            </g>
-        </svg>
     </header>
 
     <main>
