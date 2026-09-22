@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Behind a tunnel/CDN (Cloudflare) the app must honour X-Forwarded-*
+        // so generated URLs keep the https scheme of the original request.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'setlocale' => \App\Http\Middleware\SetLocale::class,
         ]);
