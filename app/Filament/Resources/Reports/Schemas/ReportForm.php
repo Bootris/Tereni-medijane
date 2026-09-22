@@ -53,6 +53,12 @@ class ReportForm
                             ->disk('public')
                             ->directory('tereni/reports')
                             ->maxSize(8192)
+                            // Browser downscales before upload: keeps requests under
+                            // server body-size limits and disk usage ~10x lower.
+                            ->imageResizeMode('contain')
+                            ->imageResizeTargetWidth('1920')
+                            ->imageResizeTargetHeight('1920')
+                            ->imageResizeUpscale(false)
                             // Without this, a photo file missing from disk gets
                             // silently dropped from state and any unrelated save
                             // would NULL the DB reference.

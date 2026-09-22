@@ -106,6 +106,12 @@ class CourtForm
                             ->directory('tereni/courts')
                             ->maxSize(8192)
                             ->maxFiles(12)
+                            // Browser downscales before upload: keeps requests under
+                            // server body-size limits and disk usage ~10x lower.
+                            ->imageResizeMode('contain')
+                            ->imageResizeTargetWidth('1920')
+                            ->imageResizeTargetHeight('1920')
+                            ->imageResizeUpscale(false)
                             // Removed images are deleted from disk on save (model hook).
                             ->helperText('Do 12 slika, najviše 8 MB po slici. Prevuci sličice za redosled prikaza; X uklanja sliku (briše se sa diska pri čuvanju).'),
                     ]),

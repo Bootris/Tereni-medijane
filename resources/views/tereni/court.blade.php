@@ -220,6 +220,42 @@
     <x-slot:scripts>
         <x-tereni.gallery-lightbox />
 
+        {{-- Phone photos are 3–8 MB; server request limits are far below that.
+             Downscale to max 1920px in the browser before upload; on any failure
+             (old browser, exotic format) the original file is sent unchanged. --}}
+        <script>
+            (function () {
+                const input = document.getElementById('photo');
+                if (!input || typeof DataTransfer === 'undefined' || typeof createImageBitmap === 'undefined') return;
+
+                const MAX_DIM = 1920;
+                const MAX_BYTES = 1024 * 1024;
+
+                input.addEventListener('change', async () => {
+                    const file = input.files && input.files[0];
+                    if (!file || !file.type.startsWith('image/') || file.type === 'image/gif') return;
+
+                    try {
+                        const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+                        const scale = Math.min(1, MAX_DIM / Math.max(bitmap.width, bitmap.height));
+                        if (scale === 1 && file.size <= MAX_BYTES) return;
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(bitmap.width * scale);
+                        canvas.height = Math.round(bitmap.height * scale);
+                        canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+                        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+                        if (!blob || blob.size >= file.size) return;
+
+                        const dt = new DataTransfer();
+                        dt.items.add(new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }));
+                        input.files = dt.files;
+                    } catch (e) { /* keep the original file */ }
+                });
+            })();
+        </script>
+
         @if ($galleryUrls)
             <script>
                 (function () {
@@ -263,7 +299,7 @@
 
         {{-- Lightbox: full-size photo + the exact problem (category, status, when, description). --}}
         <div id="lb" role="dialog" aria-modal="true" aria-label="Pregled prijave"
-            style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,.88);padding:1rem;align-items:center;justify-content:center">
+            style="display:none;position:fixed;inset:0;z-index:1200;background:rgba(15,23,42,.88);padding:1rem;align-items:center;justify-content:center">
             <figure style="margin:0;max-width:min(940px,100%);max-height:100%;display:flex;flex-direction:column;background:#fff;border-radius:.75rem;overflow:hidden">
                 <img id="lb-img" src="" alt="Fotografija problema" style="width:100%;max-height:70vh;object-fit:contain;background:#0f172a">
                 <figcaption style="padding:.85rem 1.1rem">
