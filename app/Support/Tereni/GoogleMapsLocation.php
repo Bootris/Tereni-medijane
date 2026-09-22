@@ -3,6 +3,7 @@
 namespace App\Support\Tereni;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Pulls coordinates out of whatever gets pasted from Google Maps:
@@ -112,6 +113,11 @@ class GoogleMapsLocation
             return null;
         }
 
+        // Every hop is recorded so a failure in production (where Google
+        // treats datacenter IPs differently) can be read from the log.
+        $trace = [];
+        $error = null;
+
         try {
             for ($hop = 0; $hop < 6; $hop++) {
                 $response = Http::timeout(8)
@@ -120,8 +126,14 @@ class GoogleMapsLocation
                     ->get($url);
 
                 $next = $response->header('Location');
+                $trace[] = $response->status() . ' ' . $url . ($next ? ' -> ' . $next : '');
+
                 if (! $next) {
-                    return self::extractFromPage($response->body());
+                    if ($coords = self::extractFromPage($response->body())) {
+                        return $coords;
+                    }
+                    $trace[] = 'page without coordinates: ' . mb_substr(strip_tags($response->body()), 0, 200);
+                    break;
                 }
 
                 if (str_starts_with($next, '/')) {
@@ -139,13 +151,20 @@ class GoogleMapsLocation
 
                 // Never follow a redirect off Google (no SSRF via crafted links).
                 if (! self::isGoogleHost(parse_url($next, PHP_URL_HOST))) {
-                    return null;
+                    $trace[] = 'refused non-Google redirect';
+                    break;
                 }
                 $url = $next;
             }
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             // Network failure just means "couldn't read the link".
+            $error = $e->getMessage();
         }
+
+        Log::warning('Google Maps link: lokacija nije pročitana', [
+            'hops' => $trace,
+            'error' => $error,
+        ]);
 
         return null;
     }
