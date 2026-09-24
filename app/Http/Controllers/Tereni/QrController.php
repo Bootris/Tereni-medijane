@@ -7,7 +7,7 @@ use App\Models\Court;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /**
- * QR code (SVG) that encodes a field's public URL — this is what gets printed
+ * QR code (SVG) that encodes a field's public URL - this is what gets printed
  * on the plaque bolted to the fence. SVG needs no imagick extension.
  */
 class QrController extends Controller

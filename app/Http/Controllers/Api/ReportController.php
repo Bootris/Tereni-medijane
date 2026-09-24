@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 class ReportController extends Controller
 {
     /**
-     * POST /api/v1/tereni/{court}/prijave — submit a report. Same anti-spam
+     * POST /api/v1/tereni/{court}/prijave - submit a report. Same anti-spam
      * posture as the web form: route throttle + mandatory photo + moderation.
      */
     public function store(Request $request, Court $court, ReportNotifier $notifier): JsonResponse

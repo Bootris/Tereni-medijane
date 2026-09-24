@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
 
 /**
- * Objekat — a school or open sports ground. Owns fields (courts) and the people
+ * Objekat - a school or open sports ground. Owns fields (courts) and the people
  * responsible for them (stewards).
  */
 class Facility extends Model

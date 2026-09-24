@@ -1,8 +1,8 @@
 @props(['title' => null, 'description' => null, 'head' => null])
 
 @php
-    $siteName = $site['site_name'] ?? config('app.name');
-    $pageTitle = $title ? "{$title} — Tereni Medijana" : 'Tereni Medijana';
+    $brand = 'Tereni Medijane';
+    $pageTitle = $title ? "{$title} - {$brand}" : $brand;
 @endphp
 <!DOCTYPE html>
 <html lang="sr">
@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        {{-- "Asfalt i farba": the palette of the courts themselves — asphalt,
+        {{-- "Asfalt i farba": the palette of the courts themselves - asphalt,
              painted lines, court green, marking yellow. Yellow is rationed:
              focus rings, the open-reports number, the report form stripe. --}}
         :root {
@@ -36,7 +36,7 @@
             --line: #dde1d6;
             --bg: #eef0eb;
             --card: #ffffff;
-            /* Legacy aliases — page styles written against the old names. */
+            /* Legacy aliases - page styles written against the old names. */
             --brand: var(--teren);
             --brand-dark: var(--teren-dark);
         }
@@ -48,6 +48,10 @@
             background: var(--bg);
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
+            /* Sticky footer: main grows, so a short page never leaves the
+               footer floating mid-screen. */
+            min-height: 100vh; min-height: 100dvh;
+            display: flex; flex-direction: column;
         }
         a { color: var(--teren-dark); }
         .wrap { max-width: 980px; margin: 0 auto; padding: 0 1rem; }
@@ -60,36 +64,44 @@
             letter-spacing: .16em; text-transform: uppercase; color: var(--teren); }
         .section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
             font-size: 1.32rem; letter-spacing: .05em; text-transform: uppercase; line-height: 1.2; }
-        /* A short strip of paint under a heading — the court-line motif. */
+        /* A short strip of paint under a heading - the court-line motif. */
         .rule::after { content: ''; display: block; width: 2.7rem; height: .28rem;
             border-radius: 999px; background: var(--teren); margin-top: .4rem; }
 
-        header.site { background: var(--asfalt); color: var(--linija);
-            border-bottom: 3px solid var(--teren); }
+        header.site { position: sticky; top: 0; z-index: 50; background: var(--asfalt);
+            color: var(--linija); box-shadow: 0 2px 14px rgba(20, 24, 30, .28); }
+        /* Bottom edge painted like a court line: green with a yellow centre mark. */
+        header.site::after { content: ''; display: block; height: 4px;
+            background: linear-gradient(90deg, var(--teren) 0 46%, var(--signal) 46% 54%, var(--teren) 54% 100%); }
         header.site .wrap {
             display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-            padding-top: .95rem; padding-bottom: .95rem;
+            min-height: 4.1rem;
         }
         header.site a { color: inherit; text-decoration: none; }
-        .brand { display: flex; align-items: center; gap: .65rem; }
-        .brand-mark { flex: 0 0 auto; display: block; color: var(--signal); }
-        .brand-text { font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-            font-size: 1.28rem; line-height: 1; letter-spacing: .13em; text-transform: uppercase; }
-        .brand-text small { display: block; font-weight: 600; font-size: .66rem;
-            letter-spacing: .22em; opacity: .62; margin-top: .3rem; }
-        nav.top { display: flex; gap: 1.4rem; flex: 0 0 auto; }
-        nav.top a { position: relative; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
-            font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; opacity: .8;
-            white-space: nowrap; padding: .15rem 0; }
-        nav.top a:hover { opacity: 1; }
-        nav.top a.active { opacity: 1; }
-        nav.top a.active::after { content: ''; position: absolute; left: 0; right: 0;
-            bottom: -.28rem; height: 3px; border-radius: 999px; background: var(--signal); }
+        .brand { display: flex; align-items: center; gap: .75rem; }
+        .brand-mark { flex: 0 0 auto; display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
+            border-radius: .6rem; background: var(--teren); color: var(--linija);
+            box-shadow: inset 0 0 0 2px rgba(245, 242, 232, .18); transition: transform .2s; }
+        .brand:hover .brand-mark { transform: rotate(-6deg); }
+        .brand-text { font-family: 'Anton', 'Barlow Condensed', sans-serif; font-weight: 400;
+            font-size: 1.45rem; line-height: 1; letter-spacing: .05em; text-transform: uppercase; }
+        .brand-text em { font-style: normal; color: var(--signal); }
+        .brand-text small { display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+            font-size: .68rem; letter-spacing: .22em; opacity: .62; margin-top: .32rem; }
+        nav.top { display: flex; gap: .3rem; flex: 0 0 auto; }
+        nav.top a { display: flex; align-items: center; gap: .4rem; font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 600; font-size: .98rem; letter-spacing: .1em; text-transform: uppercase;
+            white-space: nowrap; padding: .45rem .85rem; border-radius: .5rem; color: rgba(245, 242, 232, .78);
+            transition: background .15s, color .15s; }
+        nav.top a svg { flex: 0 0 auto; opacity: .85; }
+        nav.top a:hover { background: var(--asfalt-2); color: var(--linija); }
+        nav.top a.active { background: var(--linija); color: var(--asfalt); }
+        nav.top a.active svg { color: var(--teren); opacity: 1; }
 
-        main { padding: 1.6rem 0 3rem; }
+        main { flex: 1 0 auto; padding: 1.6rem 0 3rem; }
         .card { background: var(--card); border: 1px solid var(--line); border-radius: .8rem; }
 
-        /* Court cards + filter chips — shared by the map and the directory page. */
+        /* Court cards + filter chips - shared by the map and the directory page. */
         .court-grid { list-style:none; padding:0; margin:0; display:grid; gap:.8rem;
             grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); }
         .court-card { padding:0; cursor:pointer; overflow:hidden; display:flex; flex-direction:column;
@@ -159,13 +171,24 @@
 
         footer.site { background: var(--asfalt); color: var(--linija);
             border-top: 4px solid var(--teren); font-size: .84rem; }
-        footer.site .wrap { padding: 1.4rem 1rem; opacity: .8; }
+        footer.site .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+            gap: .5rem 1.2rem; padding: 1.4rem 1rem; }
+        footer.site .copy { opacity: .8; }
+        footer.site nav { display: flex; gap: 1.1rem; }
+        footer.site nav a { color: var(--linija); opacity: .8; text-decoration: none;
+            font-family: 'Barlow Condensed', sans-serif; font-weight: 600; letter-spacing: .08em;
+            text-transform: uppercase; }
+        footer.site nav a:hover { opacity: 1; color: var(--signal); }
 
         @media (max-width: 640px) {
-            header.site .wrap { flex-direction: column; align-items: flex-start; gap: .6rem;
-                padding-top: .95rem; padding-bottom: .95rem; }
-            .brand-text { font-size: 1.18rem; }
-            nav.top { gap: 1.5rem; }
+            /* Two-row header would eat a phone screen - scroll it away there. */
+            header.site { position: static; }
+            header.site .wrap { flex-direction: column; align-items: stretch; gap: .55rem;
+                padding-top: .7rem; padding-bottom: .6rem; }
+            .brand-mark { width: 2.25rem; height: 2.25rem; }
+            .brand-text { font-size: 1.25rem; }
+            nav.top { gap: .25rem; }
+            nav.top a { flex: 1 1 0; justify-content: center; padding: .42rem .4rem; font-size: .9rem; }
             main { padding: 1.25rem 0 2.4rem; }
         }
 
@@ -179,27 +202,35 @@
 <body>
     <header class="site">
         <div class="wrap">
-            <a href="{{ route('tereni.map') }}" class="brand">
-                {{-- Mini court glyph — same motif as the favicon. --}}
-                <svg class="brand-mark" viewBox="0 0 30 21" width="30" height="21" fill="none" aria-hidden="true">
-                    <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                        <rect x="1.5" y="1.5" width="27" height="18" rx="2.5" />
-                        <line x1="15" y1="1.5" x2="15" y2="19.5" />
-                        <circle cx="15" cy="10.5" r="3.6" />
-                    </g>
-                </svg>
+            <a href="{{ route('tereni.map') }}" class="brand" aria-label="{{ $brand }} - početna">
+                {{-- Mini court glyph - same motif as the favicon. --}}
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 30 21" width="26" height="18" fill="none">
+                        <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                            <rect x="1.5" y="1.5" width="27" height="18" rx="2.5" />
+                            <line x1="15" y1="1.5" x2="15" y2="19.5" />
+                            <circle cx="15" cy="10.5" r="3.6" />
+                        </g>
+                    </svg>
+                </span>
                 <span class="brand-text">
-                    Tereni Medijana
-                    @if (mb_strtolower($siteName) !== 'tereni medijana')
-                        <small>{{ $siteName }}</small>
-                    @else
-                        <small>Gradska opština Medijana</small>
-                    @endif
+                    Tereni <em>Medijane</em>
+                    <small>Gradska opština Medijana · Niš</small>
                 </span>
             </a>
-            <nav class="top">
-                <a href="{{ route('tereni.map') }}" @class(['active' => request()->routeIs('tereni.map')])>Mapa</a>
-                <a href="{{ route('tereni.list') }}" @class(['active' => request()->routeIs('tereni.list')])>Svi tereni</a>
+            <nav class="top" aria-label="Glavna navigacija">
+                <a href="{{ route('tereni.map') }}" @class(['active' => request()->routeIs('tereni.map')])>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                    Mapa
+                </a>
+                <a href="{{ route('tereni.list') }}" @class(['active' => request()->routeIs('tereni.list', 'tereni.court')])>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                    Svi tereni
+                </a>
+                <a href="{{ route('tereni.guide') }}" @class(['active' => request()->routeIs('tereni.guide')])>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
+                    Uputstva
+                </a>
             </nav>
         </div>
     </header>
@@ -212,7 +243,12 @@
 
     <footer class="site">
         <div class="wrap">
-            © {{ date('Y') }} {{ $siteName }} · Prijavi stanje terena u Medijani. Bez registracije.
+            <span class="copy">© {{ date('Y') }} {{ $brand }} · Prijavi stanje terena u Medijani. Bez registracije.</span>
+            <nav aria-label="Podnožje">
+                <a href="{{ route('tereni.map') }}">Mapa</a>
+                <a href="{{ route('tereni.list') }}">Svi tereni</a>
+                <a href="{{ route('tereni.guide') }}">Uputstva</a>
+            </nav>
         </div>
     </footer>
 

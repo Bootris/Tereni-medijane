@@ -60,7 +60,7 @@ class ManageSettings extends Page
                     ]),
                 Section::make('Branding')
                     ->columns(3)
-                    ->description('Colors and font are served to the frontend and applied as CSS variables — no code change to rebrand.')
+                    ->description('Colors and font are served to the frontend and applied as CSS variables - no code change to rebrand.')
                     ->components([
                         ColorPicker::make('theme_primary')->label('Primary color'),
                         ColorPicker::make('theme_accent')->label('Accent color'),
@@ -99,7 +99,7 @@ class ManageSettings extends Page
                         TextInput::make('calendly_url')
                             ->label('Booking URL (Calendly / Cal.com)')
                             ->url()
-                            ->helperText('Optional — adds a "Schedule consultation" button on the site.'),
+                            ->helperText('Optional - adds a "Schedule consultation" button on the site.'),
                     ]),
             ])
             ->statePath('data');

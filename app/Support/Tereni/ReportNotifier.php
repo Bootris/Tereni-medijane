@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\URL;
 
 /**
  * One place that fans a report event out to the responsible people (email + SMS)
- * and back to the reporter. Never lets a delivery failure break the request —
+ * and back to the reporter. Never lets a delivery failure break the request -
  * the report is already saved; notifications are best-effort.
  */
 class ReportNotifier
@@ -27,7 +27,7 @@ class ReportNotifier
 
         $adminUrl = $this->adminReportUrl($report);
         $smsText = sprintf(
-            'Nova prijava (%s) — %s. Detalji: %s',
+            'Nova prijava (%s) - %s. Detalji: %s',
             $report->category->label(),
             $court?->name,
             $adminUrl,

@@ -18,7 +18,7 @@ class ReportSubmitted extends Mailable
     {
         $court = $this->report->court;
 
-        return $this->subject('Nova prijava — '.$court->name.' ('.$this->report->category->label().')')
+        return $this->subject('Nova prijava - '.$court->name.' ('.$this->report->category->label().')')
             ->view('emails.tereni.report_submitted');
     }
 }

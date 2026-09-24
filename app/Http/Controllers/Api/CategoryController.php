@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    /** GET /api/v1/categories — with published-post counts. */
+    /** GET /api/v1/categories - with published-post counts. */
     public function index()
     {
         $categories = Category::withCount(['posts' => fn ($q) => $q->published()])

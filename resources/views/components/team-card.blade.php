@@ -34,7 +34,7 @@
 
     <div class="mt-auto flex items-center gap-4 pt-6 text-ink-400">
         @if ($member->email)
-            <a href="mailto:{{ $member->email }}" class="transition hover:text-bronze-600" aria-label="Email — {{ $member->name }}">
+            <a href="mailto:{{ $member->email }}" class="transition hover:text-bronze-600" aria-label="Email - {{ $member->name }}">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -44,7 +44,7 @@
         @endif
         @if ($member->phone)
             <a href="tel:{{ preg_replace('/[^+\d]/', '', $member->phone) }}" class="transition hover:text-bronze-600"
-                aria-label="{{ __('lawyer.contact.phone') }} — {{ $member->name }}">
+                aria-label="{{ __('lawyer.contact.phone') }} - {{ $member->name }}">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M4 5c0 8.284 6.716 15 15 15l2-4-4.5-2.5-2 2A11.05 11.05 0 0 1 9.5 10.5l2-2L9 4 4 5z" />
@@ -53,7 +53,7 @@
         @endif
         @if ($member->linkedin)
             <a href="{{ $member->linkedin }}" target="_blank" rel="noopener" class="transition hover:text-bronze-600"
-                aria-label="LinkedIn — {{ $member->name }}">
+                aria-label="LinkedIn - {{ $member->name }}">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M6.5 8.5v11H3v-11h3.5zM4.75 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM21 13.3v6.2h-3.5v-5.7c0-1.4-.6-2.3-1.9-2.3-1 0-1.6.7-1.9 1.4-.1.2-.1.6-.1.9v5.7H10s.05-9.9 0-11h3.5v1.6c.5-.8 1.4-1.9 3.3-1.9 2.4 0 4.2 1.6 4.2 5.1z" />
                 </svg>

@@ -10,7 +10,7 @@ use App\Http\Controllers\Tereni\QrController as TereniQrController;
 use App\Http\Controllers\Tereni\ReportController as TereniReportController;
 use Illuminate\Support\Facades\Route;
 
-// Kad je Tereni modul upaljen, mapa JE sajt — koren vodi pravo na nju.
+// Kad je Tereni modul upaljen, mapa JE sajt - koren vodi pravo na nju.
 Route::get('/', fn () => config('site.features.tereni')
     ? redirect()->route('tereni.map')
     : redirect(app()->getLocale()));
@@ -18,13 +18,14 @@ Route::get('/', fn () => config('site.features.tereni')
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
-| Tereni Medijana — public map + QR reporting. Unprefixed (like /blog) so the
+| Tereni Medijana - public map + QR reporting. Unprefixed (like /blog) so the
 | printed QR URLs stay short and locale-independent. Dormant unless the feature
 | is enabled for this client.
 */
 if (config('site.features.tereni')) {
     Route::get('/mapa', [TereniMapController::class, 'index'])->name('tereni.map');
     Route::get('/tereni', [TereniCourtController::class, 'index'])->name('tereni.list');
+    Route::view('/uputstva', 'tereni.guide')->name('tereni.guide');
     Route::get('/teren/{court}', [TereniCourtController::class, 'show'])->name('tereni.court');
     Route::get('/teren/{court}/qr.svg', [TereniQrController::class, 'show'])->name('tereni.court.qr');
 

@@ -1,4 +1,4 @@
-<x-tereni.layout title="Mapa terena" description="Javna mapa sportskih terena u Medijani — prijavi stanje skeniranjem QR koda ili klikom na teren.">
+<x-tereni.layout title="Mapa terena" description="Javna mapa sportskih terena u Medijani - prijavi stanje skeniranjem QR koda ili klikom na teren.">
     <x-slot:head>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    {{-- Filters + search — client-side over the same dataset the map uses.
+    {{-- Filters + search - client-side over the same dataset the map uses.
          Tap chips instead of native selects: no dropdown, phone-friendly. --}}
     <div class="filters">
         <input id="f-search" type="search" placeholder="Pretraga: teren, škola, naselje…" aria-label="Pretraga terena">
@@ -100,7 +100,7 @@
         <p class="muted" style="margin-top:1rem">Još nema unetih terena na mapi.</p>
     @else
         {{-- First few fields as cards; the full directory lives at /tereni.
-             Cards are wired to the map — click centers and opens the popup. --}}
+             Cards are wired to the map - click centers and opens the popup. --}}
         <h2 class="section-title rule" style="margin:1.8rem 0 .8rem">Tereni <span id="count" class="muted" style="font-family:'Barlow',sans-serif;font-weight:500;font-size:.85rem;letter-spacing:0;text-transform:none"></span></h2>
         <ul id="court-list" class="court-grid">
             @foreach ($courts->take(6) as $i => $court)
@@ -112,7 +112,7 @@
         </p>
     @endif
 
-    {{-- The scoreboard — visible effect motivates reporting. --}}
+    {{-- The scoreboard - visible effect motivates reporting. --}}
     @if (($stats['resolved_total'] ?? 0) > 0 || ($stats['open'] ?? 0) > 0)
         <section class="semafor" aria-label="Stanje prijava">
             <span class="eyebrow">Semafor</span>
@@ -142,7 +142,7 @@
             }).addTo(map);
 
             // One marker per court, icon by sport, red ring when it has an
-            // open reported problem — the first thing a player wants to know.
+            // open reported problem - the first thing a player wants to know.
             const markers = [];
             courts.forEach((c, i) => {
                 if (c.lat == null || c.lng == null) { markers.push(null); return; }
@@ -259,7 +259,7 @@
                         radius: 8, color: '#1d4ed8', fillColor: '#3b82f6', fillOpacity: .9, weight: 2,
                     }).addTo(map).bindPopup('Ti si ovde');
                     map.flyTo(at, 15);
-                }, () => alert('Ne mogu da odredim lokaciju — proveri dozvolu za lociranje.'));
+                }, () => alert('Ne mogu da odredim lokaciju - proveri dozvolu za lociranje.'));
             });
 
             function escapeHtml(s) {

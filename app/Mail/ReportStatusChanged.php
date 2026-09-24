@@ -21,7 +21,7 @@ class ReportStatusChanged extends Mailable
     {
         $court = $this->report->court;
 
-        return $this->subject('Status prijave — '.$court->name.': '.$this->report->status->label())
+        return $this->subject('Status prijave - '.$court->name.': '.$this->report->status->label())
             ->view('emails.tereni.report_status_changed');
     }
 }

@@ -24,7 +24,7 @@ return [
         'title_1' => 'Pravna sigurnost.',
         'title_accent' => 'Poverenje.',
         'title_2' => 'Rezultati.',
-        'text' => 'Zastupamo klijente sa posvećenošću, diskrecijom i jasnom strategijom — od prvog saveta do konačnog rešenja.',
+        'text' => 'Zastupamo klijente sa posvećenošću, diskrecijom i jasnom strategijom - od prvog saveta do konačnog rešenja.',
         'cta_primary' => 'Zakažite konsultaciju',
         'cta_secondary' => 'Naše oblasti prakse',
     ],
@@ -39,7 +39,7 @@ return [
     'about' => [
         'eyebrow' => 'O kancelariji',
         'title' => 'Posvećeni zaštiti vaših interesa',
-        'text' => 'Naša kancelarija pruža celovitu pravnu podršku fizičkim licima i privrednim društvima. Svakom predmetu pristupamo temeljno i lično — jer dobar pravni savet počinje razumevanjem vaše situacije.',
+        'text' => 'Naša kancelarija pruža celovitu pravnu podršku fizičkim licima i privrednim društvima. Svakom predmetu pristupamo temeljno i lično - jer dobar pravni savet počinje razumevanjem vaše situacije.',
         'points' => [
             [
                 'title' => 'Iskustvo',
@@ -47,7 +47,7 @@ return [
             ],
             [
                 'title' => 'Posvećenost',
-                'text' => 'Vaš predmet vodi advokat koga poznajete — bez prebacivanja i bez izgubljenih informacija.',
+                'text' => 'Vaš predmet vodi advokat koga poznajete - bez prebacivanja i bez izgubljenih informacija.',
             ],
             [
                 'title' => 'Poverljivost',
@@ -75,11 +75,11 @@ return [
             ],
             'family' => [
                 'title' => 'Porodično pravo',
-                'text' => 'Razvod, starateljstvo, izdržavanje i imovinski odnosi — sa posebnom pažnjom prema osetljivim situacijama.',
+                'text' => 'Razvod, starateljstvo, izdržavanje i imovinski odnosi - sa posebnom pažnjom prema osetljivim situacijama.',
             ],
             'labor' => [
                 'title' => 'Radno pravo',
-                'text' => 'Ugovori o radu, otkazi, mobing i radni sporovi — za zaposlene i poslodavce.',
+                'text' => 'Ugovori o radu, otkazi, mobing i radni sporovi - za zaposlene i poslodavce.',
             ],
             'real_estate' => [
                 'title' => 'Nepokretnosti',
@@ -97,7 +97,7 @@ return [
     'blog' => [
         'eyebrow' => 'Blog',
         'title' => 'Pravni saveti i novosti',
-        'subtitle' => 'Praktični tekstovi o pravima, obavezama i postupcima — pisani jasno i bez pravnog žargona.',
+        'subtitle' => 'Praktični tekstovi o pravima, obavezama i postupcima - pisani jasno i bez pravnog žargona.',
         'read_more' => 'Pročitajte više',
         'view_all' => 'Svi tekstovi',
         'min_read' => 'min čitanja',
@@ -110,7 +110,7 @@ return [
 
     'cta' => [
         'title' => 'Potrebna vam je pravna pomoć?',
-        'text' => 'Zakažite konsultaciju — razmotrićemo vašu situaciju i predložiti jasne sledeće korake.',
+        'text' => 'Zakažite konsultaciju - razmotrićemo vašu situaciju i predložiti jasne sledeće korake.',
         'button' => 'Zakažite termin',
         'or_write' => 'ili nam pišite',
     ],
@@ -118,7 +118,7 @@ return [
     'contact' => [
         'eyebrow' => 'Kontakt',
         'title' => 'Zakažite konsultaciju',
-        'subtitle' => 'Pošaljite nam poruku — odgovaramo u roku od 24 časa radnim danima.',
+        'subtitle' => 'Pošaljite nam poruku - odgovaramo u roku od 24 časa radnim danima.',
         'info_title' => 'Podaci kancelarije',
         'address' => 'Adresa',
         'phone' => 'Telefon',
@@ -131,12 +131,12 @@ return [
             'subject' => 'Tema',
             'message' => 'Vaša poruka',
             'submit' => 'Pošaljite poruku',
-            'success' => 'Hvala! Vaša poruka je poslata — javićemo vam se u najkraćem roku.',
+            'success' => 'Hvala! Vaša poruka je poslata - javićemo vam se u najkraćem roku.',
         ],
     ],
 
     'footer' => [
-        'about' => 'Advokatska kancelarija posvećena zaštiti interesa klijenata — sa iskustvom, integritetom i punom poverljivošću.',
+        'about' => 'Advokatska kancelarija posvećena zaštiti interesa klijenata - sa iskustvom, integritetom i punom poverljivošću.',
         'quick_links' => 'Brzi linkovi',
         'contact' => 'Kontakt',
         'rights' => 'Sva prava zadržana.',

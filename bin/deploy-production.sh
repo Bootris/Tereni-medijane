@@ -11,11 +11,11 @@ export COMPOSER_ALLOW_SUPERUSER=1 NODE_OPTIONS=--max-old-space-size=1536
 # Preflight: .env i SQLite baza zive samo na serveru (rsync ih ne salje).
 # Bez njih bi deploy pukao na nejasnom mestu, pa se proveravaju odmah.
 if [ ! -f "$APP/.env" ]; then
-    echo "GRESKA: nema $APP/.env — napravi ga na serveru pre prvog deploya." >&2
+    echo "GRESKA: nema $APP/.env - napravi ga na serveru pre prvog deploya." >&2
     exit 1
 fi
 if grep -qE '^DB_CONNECTION=sqlite' "$APP/.env" && [ ! -f "$APP/database/database.sqlite" ]; then
-    echo "GRESKA: nema $APP/database/database.sqlite — napravi bazu na serveru:" >&2
+    echo "GRESKA: nema $APP/database/database.sqlite - napravi bazu na serveru:" >&2
     echo "  touch $APP/database/database.sqlite && php artisan migrate --force --seed" >&2
     exit 1
 fi
@@ -40,7 +40,7 @@ fi
 sudo -u www-data php artisan optimize
 rm -rf "$APP/node_modules"          # build artifacts already in public/build
 
-# Ime php-fpm servisa zavisi od PHP verzije na serveru — nadji ga umesto da ga pogadjas.
+# Ime php-fpm servisa zavisi od PHP verzije na serveru - nadji ga umesto da ga pogadjas.
 FPM="$(systemctl list-units --no-legend --type=service 'php*-fpm.service' | awk '{print $1}' | head -1)"
 systemctl restart "${FPM:?php-fpm servis nije pronadjen}"
 

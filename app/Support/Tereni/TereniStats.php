@@ -32,7 +32,7 @@ class TereniStats
     {
         $closed = [ReportStatus::Resolved->value, ReportStatus::Rejected->value];
 
-        // First "Rešeno" step per report — resolution moments for month/average.
+        // First "Rešeno" step per report - resolution moments for month/average.
         $resolutions = ReportStatusChange::query()
             ->where('status', ReportStatus::Resolved->value)
             ->whereHas('report', fn ($q) => $q->where('is_public', true))

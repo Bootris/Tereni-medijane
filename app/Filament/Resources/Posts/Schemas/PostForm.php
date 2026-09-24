@@ -88,7 +88,7 @@ class PostForm
                         TextInput::make('video_url')
                             ->label('Video URL')
                             ->url()
-                            ->helperText('YouTube or Vimeo link — embedded in the article.'),
+                            ->helperText('YouTube or Vimeo link - embedded in the article.'),
                     ]),
 
                 Section::make('SEO')

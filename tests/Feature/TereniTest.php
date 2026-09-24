@@ -42,7 +42,7 @@ class TereniTest extends TestCase
     {
         $this->court(['name' => 'Košarkaški teren A']);
         $this->court(['name' => 'Skriveni teren', 'is_active' => false]);
-        // No own coords and none on the facility — no marker, but the card
+        // No own coords and none on the facility - no marker, but the card
         // and the totals must still include it.
         $this->court([
             'name' => 'Teren bez lokacije',
@@ -87,6 +87,38 @@ class TereniTest extends TestCase
             ->assertDontSee('Teren 01');
 
         $this->get(route('tereni.map'))->assertOk()->assertSee(route('tereni.list'));
+    }
+
+    public function test_guide_page_explains_reporting_and_is_linked_from_nav(): void
+    {
+        $this->get(route('tereni.guide'))
+            ->assertOk()
+            ->assertSee('Kako prijaviti problem')
+            ->assertSee('U planu radova')
+            ->assertSee('Pravila korišćenja');
+
+        $this->get(route('tereni.map'))->assertOk()->assertSee(route('tereni.guide'));
+    }
+
+    public function test_guide_text_is_editable_from_admin(): void
+    {
+        $editor = User::factory()->create(['role' => User::ROLE_EDITOR]);
+        $this->actingAs($editor)->get('/admin/uputstva')->assertOk()->assertSee('Čemu služi');
+
+        \App\Support\Tereni\GuideContent::save([
+            'lead' => 'Novi uvod.',
+            'sections' => [
+                ['title' => 'Nova sekcija', 'body' => '<p>Moj tekst.</p><p>[statusi]</p>'],
+            ],
+        ]);
+
+        $this->get(route('tereni.guide'))
+            ->assertOk()
+            ->assertSee('Novi uvod.')
+            ->assertSee('Moj tekst.')
+            ->assertSee('U planu radova')            // [statusi] expanded
+            ->assertSee('href="#nova-sekcija"', false)
+            ->assertDontSee('Čemu služi');
     }
 
     public function test_courts_directory_filters_by_sport_and_state(): void
@@ -281,7 +313,7 @@ class TereniTest extends TestCase
 
     public function test_court_without_own_coordinates_inherits_facility_location(): void
     {
-        // Facility has coordinates, the court itself doesn't — it must still
+        // Facility has coordinates, the court itself doesn't - it must still
         // show up on the map and in the API, at the facility's location.
         $court = Court::factory()
             ->for(\App\Models\Facility::factory()->create(['lat' => 43.31, 'lng' => 21.91]))

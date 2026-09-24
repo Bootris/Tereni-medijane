@@ -6,7 +6,7 @@ use App\Http\Resources\Concerns\ResolvesMedia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** Full post — used on the single-post endpoint (includes body). */
+/** Full post - used on the single-post endpoint (includes body). */
 class PostResource extends JsonResource
 {
     use ResolvesMedia;

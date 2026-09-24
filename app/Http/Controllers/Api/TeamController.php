@@ -8,7 +8,7 @@ use App\Models\TeamMember;
 
 class TeamController extends Controller
 {
-    /** GET /api/v1/team — visible members, ordered. */
+    /** GET /api/v1/team - visible members, ordered. */
     public function index()
     {
         $members = TeamMember::where('visible', true)

@@ -17,7 +17,7 @@ class ContactFormSubmitted extends Mailable
 
     public function build()
     {
-        return $this->subject('Nova poruka sa sajta — ' . ($this->contactMessage->subject ?: $this->contactMessage->name))
+        return $this->subject('Nova poruka sa sajta - ' . ($this->contactMessage->subject ?: $this->contactMessage->name))
             ->replyTo($this->contactMessage->email, $this->contactMessage->name)
             ->view('emails.contact');
     }

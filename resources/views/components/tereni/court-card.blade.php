@@ -1,4 +1,4 @@
-{{-- One court card — used by the map page (with :idx for marker wiring) and
+{{-- One court card - used by the map page (with :idx for marker wiring) and
      the /tereni directory. Expects the Court::toCard() array shape. --}}
 @props(['court', 'idx' => null])
 

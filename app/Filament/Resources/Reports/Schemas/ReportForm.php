@@ -27,11 +27,11 @@ class ReportForm
                         Placeholder::make('court')
                             ->label('Teren')
                             ->content(fn (?Report $record): string => $record?->court
-                                ? $record->court->name.' — '.$record->court->facility?->name
-                                : '—'),
+                                ? $record->court->name.' - '.$record->court->facility?->name
+                                : '-'),
                         Placeholder::make('category_label')
                             ->label('Kategorija')
-                            ->content(fn (?Report $record): string => $record?->category?->label() ?? '—'),
+                            ->content(fn (?Report $record): string => $record?->category?->label() ?? '-'),
                         Placeholder::make('reporter')
                             ->label('Prijavio')
                             ->content(fn (?Report $record): string => trim(
@@ -40,11 +40,11 @@ class ReportForm
                             )),
                         Placeholder::make('submitted')
                             ->label('Vreme prijave')
-                            ->content(fn (?Report $record): string => $record?->created_at?->format('d.m.Y H:i') ?? '—'),
+                            ->content(fn (?Report $record): string => $record?->created_at?->format('d.m.Y H:i') ?? '-'),
                         Placeholder::make('description')
                             ->label('Opis')
                             ->columnSpanFull()
-                            ->content(fn (?Report $record): string => $record?->description ?: '—'),
+                            ->content(fn (?Report $record): string => $record?->description ?: '-'),
                         FileUpload::make('photo')
                             ->label('Fotografija')
                             ->columnSpanFull()
@@ -66,7 +66,7 @@ class ReportForm
                             // Citizens must attach one; moderation may remove an
                             // inappropriate photo or upload a replacement. The
                             // old file is deleted from disk on save (model hook).
-                            ->helperText('X uklanja fotografiju (neprikladna), prevlačenjem dodaš novu — stara se briše sa diska pri čuvanju.'),
+                            ->helperText('X uklanja fotografiju (neprikladna), prevlačenjem dodaš novu - stara se briše sa diska pri čuvanju.'),
                         Placeholder::make('photo_link')
                             ->hiddenLabel()
                             ->columnSpanFull()
@@ -90,7 +90,7 @@ class ReportForm
                         Textarea::make('status_note')
                             ->label('Komentar uz ovaj korak')
                             ->rows(2)
-                            // Not a column — EditReport pulls it out and logs it into
+                            // Not a column - EditReport pulls it out and logs it into
                             // the timeline when the status actually changes.
                             ->helperText('Javno vidljivo objašnjenje promene statusa.'),
                         Toggle::make('is_public')
@@ -118,7 +118,7 @@ class ReportForm
     private static function timelineHtml(?Report $record): string
     {
         if (! $record) {
-            return '—';
+            return '-';
         }
 
         $changes = $record->statusChanges()->with('changedBy')->get();

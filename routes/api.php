@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 /*
 | Public read-only content API. This is the stable contract every frontend
 | (Astro / Next / Vue / Blade) consumes. Changing a response shape means a new
-| /v2 group — /v1 stays. See docs/BACKEND.md.
+| /v2 group - /v1 stays. See docs/BACKEND.md.
 */
 Route::prefix('v1')->group(function () {
     Route::get('settings', [SettingsController::class, 'show']);
@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function () {
     Route::post('contact', [ContactController::class, 'store'])
         ->middleware('throttle:5,1');
 
-    // Tereni Medijana — public fields + reporting (dormant unless enabled).
+    // Tereni Medijana - public fields + reporting (dormant unless enabled).
     if (config('site.features.tereni')) {
         Route::get('tereni', [CourtController::class, 'index']);
         Route::get('tereni/{court}', [CourtController::class, 'show']);

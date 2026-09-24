@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** Zaduženo lice — the person notified when a report lands on their facility. */
+/** Zaduženo lice - the person notified when a report lands on their facility. */
 class Steward extends Model
 {
     protected $fillable = [

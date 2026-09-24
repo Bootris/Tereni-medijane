@@ -1,4 +1,4 @@
-# Dizajn sistem — sajtovi za male biznise
+# Dizajn sistem - sajtovi za male biznise
 
 Cilj: sajtovi koji izgledaju **skupo i namenski**, a prave se za sat. Tajna je jedan
 izvor dizajn tokena + fiksni set komponenti koje samo brendiraš po klijentu.
@@ -13,7 +13,7 @@ izvor dizajn tokena + fiksni set komponenti koje samo brendiraš po klijentu.
 
 Podela: **brend** (boja, logo, font) dolazi iz backenda po klijentu; **struktura**
 (spacing, radius, tipografska skala) je u frontend template-u i ostaje ista. Tako
-promena boje ne traži deploy koda — vidi obrazac u ovom repo-u: `@theme` blok u
+promena boje ne traži deploy koda - vidi obrazac u ovom repo-u: `@theme` blok u
 `resources/css/app.css`.
 
 ## Runtime primena (bilo koji frontend)
@@ -22,7 +22,7 @@ promena boje ne traži deploy koda — vidi obrazac u ovom repo-u: `@theme` blok
   --brand: var(--from-settings, #1a3d5c);
   --accent: var(--from-settings, #c9a24a);
   --font-head: 'PlayfairDisplay', serif;
-  --radius: 14px; --space: 8px;   /* struktura — fiksna */
+  --radius: 14px; --space: 8px;   /* struktura - fiksna */
 }
 ```
 `getSettings()` popuni `--brand/--accent/--font`; ostalo je konstanta template-a.
@@ -32,7 +32,7 @@ promena boje ne traži deploy koda — vidi obrazac u ovom repo-u: `@theme` blok
 Hero (naslov + tagline + CTA) · O vlasniku/autoru (foto + bio) · Usluge/oblasti rada ·
 Blog/priče (lista kartica) · Pojedinačan post (tekst + slika + YouTube/video) ·
 Tim (opciono) · Kontakt (forma + mapa) · Zakazivanje (Calendly embed) · Footer
-(kontakt, društvene mreže). Sve se pune iz API-ja — nema hardkodovanog teksta.
+(kontakt, društvene mreže). Sve se pune iz API-ja - nema hardkodovanog teksta.
 
 ## Preseti sekcija po tipu biznisa
 | Tip | Naglasak |
@@ -42,7 +42,7 @@ Tim (opciono) · Kontakt (forma + mapa) · Zakazivanje (Calendly embed) · Foote
 | Umetnik / zanatlija | galerija/rad, biografija, kontakt |
 | Mali shop / usluga | usluge + cene, radno vreme, mapa, poziv na akciju |
 
-Isti kod, drugačiji redosled i tekst sekcija — biraš preset pri onboardingu.
+Isti kod, drugačiji redosled i tekst sekcija - biraš preset pri onboardingu.
 
 ## Rebrand checklist (novi klijent)
 1. **Naziv biznisa + tagline** → Settings.
@@ -59,7 +59,7 @@ Isti kod, drugačiji redosled i tekst sekcija — biraš preset pri onboardingu.
 - **Pristupačnost:** kontrast AA, alt tekst na slikama, semantički HTML, fokus stanja.
 - **Suzdržan motion:** suptilne tranzicije; poštuj `prefers-reduced-motion`.
 - **Tipografija nosi dizajn:** jedan izražajan heading font + čitljiv body; dosledna skala.
-- **Bez "template" mirisa:** pravi foto vlasnika, pravi tekstovi, brend boja — ne default plava.
+- **Bez "template" mirisa:** pravi foto vlasnika, pravi tekstovi, brend boja - ne default plava.
 
 ## Veza s ostatkom
 Tokeni koje ovde definišeš servira backend ([BACKEND.md](BACKEND.md) `/settings`) i

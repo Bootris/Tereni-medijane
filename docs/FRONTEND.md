@@ -1,8 +1,8 @@
-# Frontend — template strategija
+# Frontend - template strategija
 
 Načelo: **frontend je potrošan, backend je stabilan.** Svaki frontend je zaseban repo
 koji troši isti [API ugovor](BACKEND.md#api-ugovor-apiv1). Menjaš izgled i framework
-koliko hoćeš — backend ne dodiruješ.
+koliko hoćeš - backend ne dodiruješ.
 
 ## Jedan template po framework-u
 
@@ -27,7 +27,7 @@ REBUILD_WEBHOOK=                              # backend zove na publish
 
 Svaki template nosi tanak **API klijent** (`lib/api.*`) sa funkcijama:
 `getSettings()`, `getPosts({page,category})`, `getPost(slug)`, `getTeam()`,
-`getCategories()`, `submitContact(payload)` — mapirane 1:1 na API rute.
+`getCategories()`, `submitContact(payload)` - mapirane 1:1 na API rute.
 
 ## Rendering strategija (content sajtovi)
 - **Static generate** stranice iz API-ja (Astro `getStaticPaths` / Next `generateStaticParams`).
@@ -61,7 +61,7 @@ front-astro/
 Next/Vue template: ista `lib/api`, iste komponente po nameni, drugi framework sintaksa.
 
 ## Zlatna pravila
-- Frontend **nikad** ne piše u bazu direktno — samo API.
+- Frontend **nikad** ne piše u bazu direktno - samo API.
 - Frontend **ne drži** admin kredencijale; samo (opciono) preview token.
 - Nova komponenta koja treba nov podatak → prvo dodaj polje u API ([BACKEND.md](BACKEND.md)),
   pa je koristi. Ne zaobilazi ugovor.

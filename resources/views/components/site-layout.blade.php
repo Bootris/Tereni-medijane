@@ -2,7 +2,7 @@
 
 @php
     $siteName = $site['site_name'] ?? config('app.name');
-    $pageTitle = $title ? "{$title} — {$siteName}" : $siteName;
+    $pageTitle = $title ? "{$title} - {$siteName}" : $siteName;
     $pageDescription = $description ?? __('lawyer.meta.description');
     $locale = app()->getLocale();
     $homeUrl = url($locale);

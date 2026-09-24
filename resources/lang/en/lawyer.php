@@ -24,7 +24,7 @@ return [
         'title_1' => 'Legal certainty.',
         'title_accent' => 'Trust.',
         'title_2' => 'Results.',
-        'text' => 'We represent clients with dedication, discretion and a clear strategy — from the first consultation to the final resolution.',
+        'text' => 'We represent clients with dedication, discretion and a clear strategy - from the first consultation to the final resolution.',
         'cta_primary' => 'Schedule a consultation',
         'cta_secondary' => 'Our practice areas',
     ],
@@ -39,7 +39,7 @@ return [
     'about' => [
         'eyebrow' => 'About the office',
         'title' => 'Committed to protecting your interests',
-        'text' => 'Our office provides comprehensive legal support to individuals and businesses. We approach every case thoroughly and personally — because good legal advice starts with understanding your situation.',
+        'text' => 'Our office provides comprehensive legal support to individuals and businesses. We approach every case thoroughly and personally - because good legal advice starts with understanding your situation.',
         'points' => [
             [
                 'title' => 'Experience',
@@ -47,7 +47,7 @@ return [
             ],
             [
                 'title' => 'Dedication',
-                'text' => 'Your case is handled by a lawyer you know — no handovers, no lost information.',
+                'text' => 'Your case is handled by a lawyer you know - no handovers, no lost information.',
             ],
             [
                 'title' => 'Confidentiality',
@@ -75,11 +75,11 @@ return [
             ],
             'family' => [
                 'title' => 'Family law',
-                'text' => 'Divorce, custody, support and property matters — handled with particular care in sensitive situations.',
+                'text' => 'Divorce, custody, support and property matters - handled with particular care in sensitive situations.',
             ],
             'labor' => [
                 'title' => 'Employment law',
-                'text' => 'Employment contracts, terminations, workplace harassment and labor disputes — for employees and employers.',
+                'text' => 'Employment contracts, terminations, workplace harassment and labor disputes - for employees and employers.',
             ],
             'real_estate' => [
                 'title' => 'Real estate',
@@ -97,7 +97,7 @@ return [
     'blog' => [
         'eyebrow' => 'Blog',
         'title' => 'Legal insights and news',
-        'subtitle' => 'Practical articles about rights, obligations and procedures — written clearly, without legal jargon.',
+        'subtitle' => 'Practical articles about rights, obligations and procedures - written clearly, without legal jargon.',
         'read_more' => 'Read more',
         'view_all' => 'All articles',
         'min_read' => 'min read',
@@ -110,7 +110,7 @@ return [
 
     'cta' => [
         'title' => 'Need legal assistance?',
-        'text' => 'Schedule a consultation — we will review your situation and propose clear next steps.',
+        'text' => 'Schedule a consultation - we will review your situation and propose clear next steps.',
         'button' => 'Book an appointment',
         'or_write' => 'or write to us',
     ],
@@ -118,7 +118,7 @@ return [
     'contact' => [
         'eyebrow' => 'Contact',
         'title' => 'Schedule a consultation',
-        'subtitle' => 'Send us a message — we reply within 24 hours on business days.',
+        'subtitle' => 'Send us a message - we reply within 24 hours on business days.',
         'info_title' => 'Office details',
         'address' => 'Address',
         'phone' => 'Phone',
@@ -131,12 +131,12 @@ return [
             'subject' => 'Subject',
             'message' => 'Your message',
             'submit' => 'Send message',
-            'success' => 'Thank you! Your message has been sent — we will get back to you shortly.',
+            'success' => 'Thank you! Your message has been sent - we will get back to you shortly.',
         ],
     ],
 
     'footer' => [
-        'about' => 'A law office dedicated to protecting our clients\' interests — with experience, integrity and full confidentiality.',
+        'about' => 'A law office dedicated to protecting our clients\' interests - with experience, integrity and full confidentiality.',
         'quick_links' => 'Quick links',
         'contact' => 'Contact',
         'rights' => 'All rights reserved.',

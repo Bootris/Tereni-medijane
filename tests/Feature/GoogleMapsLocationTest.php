@@ -116,7 +116,7 @@ class GoogleMapsLocationTest extends TestCase
     public function test_place_id_only_link_never_uses_page_viewport(): void
     {
         // The plain-HTTP Maps page centres its map on the *client's* IP, not
-        // the place — those coordinates must never be mistaken for the pin.
+        // the place - those coordinates must never be mistaken for the pin.
         Http::fake([
             'maps.app.goo.gl/*' => Http::response('', 302, [
                 'Location' => 'https://www.google.com/maps/place/Kocka/data=!4m2!3m1!1s0x4755b0b3a4:0x9f?entry=tts',

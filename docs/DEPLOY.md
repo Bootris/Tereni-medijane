@@ -3,14 +3,14 @@
 Svaki push na `main` (ili rucni **Run workflow**) pokrece
 [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml):
 
-1. **Provera secreta** — staje odmah ako neki nedostaje.
+1. **Provera secreta** - staje odmah ako neki nedostaje.
 2. **Rsync** repoa na server (bez `.env`, `storage/`, `vendor/`, `node_modules/`,
    `public/build`, `public/storage` i `database/database.sqlite`).
 3. **Rebuild** preko SSH-a: [`bin/deploy-production.sh`](../bin/deploy-production.sh)
    radi `composer install`, `npm ci && npm run build`, `php artisan migrate --force`,
    `php artisan optimize`, prava nad fajlovima i restart php-fpm-a. Sajt je u
    maintenance modu (`artisan down`) dok traje.
-4. **Smoke test** — `DEPLOY_URL` mora da vrati HTTP 200.
+4. **Smoke test** - `DEPLOY_URL` mora da vrati HTTP 200.
 
 Dva deploya nikad ne idu paralelno (`concurrency: production-deploy`).
 
@@ -50,9 +50,9 @@ ssh-keyscan -H 1.2.3.4 | gh secret set DEPLOY_KNOWN_HOSTS
 gh secret list                   # provera: svih 6
 ```
 
-Repo je javan, pa server podaci smeju samo ovde — nikad u kod.
+Repo je javan, pa server podaci smeju samo ovde - nikad u kod.
 
-## Prvi deploy — sta mora da postoji na serveru
+## Prvi deploy - sta mora da postoji na serveru
 
 ```bash
 # 1. kod i zavisnosti
@@ -78,11 +78,11 @@ web server (nginx/Apache) sa rootom na `public/` i HTTPS sertifikatom.
 
 ## Kad deploy pukne
 
-- **Provera secreta** — dodaj secret koji je ispisan u gresci.
-- **Permission denied (publickey)** — javni kljuc nije u `authorized_keys`,
+- **Provera secreta** - dodaj secret koji je ispisan u gresci.
+- **Permission denied (publickey)** - javni kljuc nije u `authorized_keys`,
   ili `DEPLOY_USER` nije tacan.
-- **Host key verification failed** — `DEPLOY_KNOWN_HOSTS` je zastareo; ponovo
+- **Host key verification failed** - `DEPLOY_KNOWN_HOSTS` je zastareo; ponovo
   pokreni `ssh-keyscan`.
-- **GRESKA: nema .env / database.sqlite** — preskocen je prvi deploy iznad.
-- **Smoke test != 200** — kod je vec na serveru; pogledaj `storage/logs/laravel.log`.
+- **GRESKA: nema .env / database.sqlite** - preskocen je prvi deploy iznad.
+- **Smoke test != 200** - kod je vec na serveru; pogledaj `storage/logs/laravel.log`.
 - Sajt ostao u maintenance modu: `php artisan up` na serveru.

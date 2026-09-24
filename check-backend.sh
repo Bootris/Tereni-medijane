@@ -13,7 +13,7 @@ BASE="http://127.0.0.1:${PORT}"
 PASS=0
 FAIL=0
 
-# Admin ruta je tajna i po klijentu — čitaj je iz .env, nikad ne hardkoduj /admin.
+# Admin ruta je tajna i po klijentu - čitaj je iz .env, nikad ne hardkoduj /admin.
 ADMIN_PATH=$(grep -E '^ADMIN_PATH=' .env 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"' )
 ADMIN_PATH="${ADMIN_PATH:-admin}"
 
@@ -92,5 +92,5 @@ fi
 
 echo ""
 echo "Rezultat: ${PASS} OK, ${FAIL} neuspešno"
-[ "$FAIL" -eq 0 ] && echo "✅ Backend radi." || echo "❌ Ima problema — vidi iznad."
+[ "$FAIL" -eq 0 ] && echo "✅ Backend radi." || echo "❌ Ima problema - vidi iznad."
 exit "$FAIL"

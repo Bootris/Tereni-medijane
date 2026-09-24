@@ -24,7 +24,7 @@ class CourtsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        // Facility is implied by the relationship — hide the picker.
+        // Facility is implied by the relationship - hide the picker.
         return CourtForm::configure($schema, withFacility: false);
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class SettingsController extends Controller
 {
     /**
-     * GET /api/v1/settings — brand + contact + capabilities for any frontend.
+     * GET /api/v1/settings - brand + contact + capabilities for any frontend.
      * Keys mirror what Admin → Site settings stores; unset keys return null so
      * the contract stays forward-compatible as new fields are added.
      */

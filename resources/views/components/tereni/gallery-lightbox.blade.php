@@ -66,7 +66,7 @@
             if (e.key === 'ArrowRight') show(idx + 1);
         });
 
-        // Swipe left/right on the photo — QR reporting is phone-first.
+        // Swipe left/right on the photo - QR reporting is phone-first.
         let touchX = null;
         lb.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
         lb.addEventListener('touchend', (e) => {
@@ -78,7 +78,7 @@
 
         window.tereniGallery = { open };
 
-        // Court-card covers carry their gallery inline — bind them here so
+        // Court-card covers carry their gallery inline - bind them here so
         // every page that includes this component gets the viewer for free.
         document.querySelectorAll('.court-cover[data-photos]').forEach((cover) => {
             cover.addEventListener('click', (e) => {

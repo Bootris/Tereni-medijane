@@ -30,7 +30,7 @@ class ContactMessagesTable
                 TextColumn::make('subject')
                     ->searchable()
                     ->limit(50)
-                    ->placeholder('—'),
+                    ->placeholder('-'),
                 TextColumn::make('created_at')
                     ->label('Received')
                     ->dateTime('d.m.Y H:i')

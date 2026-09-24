@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Prijava — a citizen report about a field.
+ * Prijava - a citizen report about a field.
  *
  * Status transitions never mutate `status` directly: go through changeStatus()
  * so every step is recorded in report_status_changes, which is what the public
@@ -39,7 +39,7 @@ class Report extends Model
     {
         // Keep the public disk in sync with the record: replacing or clearing
         // a photo (moderation) removes the old file, deleting the report
-        // removes its files. Deletion is guarded — see deletePhotoFile().
+        // removes its files. Deletion is guarded - see deletePhotoFile().
         static::updated(function (Report $report) {
             foreach (['photo', 'resolution_photo'] as $column) {
                 $old = $report->getOriginal($column);
@@ -50,7 +50,7 @@ class Report extends Model
                 }
 
                 // Stale concurrent edit: if the "new" photo doesn't actually
-                // exist on disk, this save is reviving a dead path — don't
+                // exist on disk, this save is reviving a dead path - don't
                 // also destroy the file the other session just stored.
                 if ($new && ! Storage::disk('public')->exists($new)) {
                     continue;
@@ -72,7 +72,7 @@ class Report extends Model
     }
 
     /**
-     * Delete a report photo from the public disk — defensively. The stored
+     * Delete a report photo from the public disk - defensively. The stored
      * path round-trips through a client-controllable form field, so only
      * files inside this module's own directory are ever deleted, and never
      * one that another report still references.
@@ -154,7 +154,7 @@ class Report extends Model
         return $this->photo ? Storage::disk('public')->url($this->photo) : null;
     }
 
-    /** "Posle popravke" photo — the public before/after pair. */
+    /** "Posle popravke" photo - the public before/after pair. */
     public function resolutionPhotoUrl(): ?string
     {
         return $this->resolution_photo ? Storage::disk('public')->url($this->resolution_photo) : null;

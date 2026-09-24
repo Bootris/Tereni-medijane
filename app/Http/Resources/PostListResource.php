@@ -6,7 +6,7 @@ use App\Http\Resources\Concerns\ResolvesMedia;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** Light post — used in listings (no body, no SEO). */
+/** Light post - used in listings (no body, no SEO). */
 class PostListResource extends JsonResource
 {
     use ResolvesMedia;

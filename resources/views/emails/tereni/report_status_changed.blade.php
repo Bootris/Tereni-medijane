@@ -14,7 +14,7 @@
                     <tr>
                         <td style="background:#14532d;padding:24px 32px;">
                             <p style="margin:0;color:#86efac;font-size:12px;letter-spacing:2px;text-transform:uppercase;">
-                                Tereni Medijana
+                                Tereni Medijane
                             </p>
                             <h1 style="margin:8px 0 0;color:#ffffff;font-size:20px;font-weight:600;">
                                 Status vaše prijave je promenjen

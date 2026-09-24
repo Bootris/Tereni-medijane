@@ -1,4 +1,4 @@
-<x-tereni.layout title="Svi tereni" description="Svi sportski tereni u Medijani — pretraga po sportu, stanju i dostupnosti.">
+<x-tereni.layout title="Svi tereni" description="Svi sportski tereni u Medijani - pretraga po sportu, stanju i dostupnosti.">
     <x-slot:styles>
         .hero h1 { margin:.15rem 0 .45rem; font-size:clamp(1.9rem,5vw,2.6rem); }
         .hero .total { font-family:'Barlow',sans-serif; font-weight:500; font-size:1rem;

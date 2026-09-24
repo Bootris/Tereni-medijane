@@ -13,7 +13,7 @@ use App\Models\Court;
  */
 class CourtController extends Controller
 {
-    /** GET /api/v1/tereni — all active, locatable fields (for the map). */
+    /** GET /api/v1/tereni - all active, locatable fields (for the map). */
     public function index()
     {
         $courts = Court::active()
@@ -25,7 +25,7 @@ class CourtController extends Controller
         return CourtResource::collection($courts);
     }
 
-    /** GET /api/v1/tereni/{court} — one field + its public report timeline. */
+    /** GET /api/v1/tereni/{court} - one field + its public report timeline. */
     public function show(Court $court)
     {
         abort_unless($court->is_active, 404);

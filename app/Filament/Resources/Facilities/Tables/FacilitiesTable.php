@@ -30,7 +30,7 @@ class FacilitiesTable
                         'skola' => 'Škola',
                         'opstina' => 'Opština',
                         'privatno' => 'Privatno',
-                        default => $state ?: '—',
+                        default => $state ?: '-',
                     }),
                 TextColumn::make('courts_count')
                     ->label('Tereni')

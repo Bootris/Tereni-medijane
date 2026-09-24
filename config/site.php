@@ -26,7 +26,7 @@ return [
     'locale' => env('APP_LOCALE', 'sr'),
 
     /*
-    | Business preset — drives default blog categories and (later) which sections
+    | Business preset - drives default blog categories and (later) which sections
     | a frontend renders. One of the keys under `presets` below.
     */
     'preset' => env('SITE_PRESET', 'generic'),
@@ -58,7 +58,7 @@ return [
         'team' => env('SITE_FEATURE_TEAM', true),
         'contact' => env('SITE_FEATURE_CONTACT', true),
         'booking' => env('SITE_FEATURE_BOOKING', false),
-        // "Tereni Medijana" — public map + QR reporting for sports fields.
+        // "Tereni Medijana" - public map + QR reporting for sports fields.
         'tereni' => env('SITE_FEATURE_TERENI', false),
     ],
 
@@ -76,7 +76,7 @@ return [
             'lng' => (float) env('TERENI_MAP_LNG', 21.9161),
             'zoom' => (int) env('TERENI_MAP_ZOOM', 14),
         ],
-        // SMS notifications to stewards. Off by default — logs instead (stub).
+        // SMS notifications to stewards. Off by default - logs instead (stub).
         'sms' => [
             'enabled' => env('TERENI_SMS_ENABLED', false),
             'log_channel' => env('TERENI_SMS_LOG_CHANNEL', 'stack'),
@@ -85,7 +85,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Presets — per business type
+    | Presets - per business type
     |--------------------------------------------------------------------------
     | `categories` seed the blog taxonomy; `sections` is a hint for frontends.
     | Add your own; keep `generic` as the neutral fallback.

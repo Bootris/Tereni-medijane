@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * "Posle popravke" photo, uploaded by the steward/moderator when resolving a
  * report. The public field page shows it next to the citizen's original photo
- * as a before/after pair — a strong trust signal that work actually happened.
+ * as a before/after pair - a strong trust signal that work actually happened.
  */
 return new class extends Migration
 {

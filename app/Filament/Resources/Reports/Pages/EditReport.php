@@ -31,7 +31,7 @@ class EditReport extends EditRecord
 
     /**
      * Persist edits, but route any status change through the model so it lands
-     * in the public timeline — and notify the reporter afterwards.
+     * in the public timeline - and notify the reporter afterwards.
      */
     protected function handleRecordUpdate(Model $record, array $data): Model
     {

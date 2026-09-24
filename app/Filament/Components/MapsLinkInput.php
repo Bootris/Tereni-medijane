@@ -35,7 +35,7 @@ class MapsLinkInput
                     Notification::make()
                         ->title($approx ? 'Lokacija preuzeta (približno)' : 'Lokacija preuzeta')
                         ->body($approx
-                            ? 'Ovaj link ne nosi tačne koordinate — uzeta je tačka sa ulice ispred mesta (' . $coords['lat'] . ', ' . $coords['lng'] . '). Proveri na mapi i po potrebi ispravi lat/lng.'
+                            ? 'Ovaj link ne nosi tačne koordinate - uzeta je tačka sa ulice ispred mesta (' . $coords['lat'] . ', ' . $coords['lng'] . '). Proveri na mapi i po potrebi ispravi lat/lng.'
                             : $coords['lat'] . ', ' . $coords['lng'])
                         ->{$approx ? 'warning' : 'success'}()
                         ->persistent()

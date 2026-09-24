@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    /** POST /api/v1/contact — honeypot + throttle (see routes/api.php). */
+    /** POST /api/v1/contact - honeypot + throttle (see routes/api.php). */
     public function store(Request $request): JsonResponse
     {
         // Honeypot: hidden field real visitors never fill.

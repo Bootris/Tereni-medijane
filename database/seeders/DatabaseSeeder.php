@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed a fresh site from config/site.php — nothing here is client-specific,
+     * Seed a fresh site from config/site.php - nothing here is client-specific,
      * so the same seeder bootstraps any business. Idempotent.
      */
     public function run(): void

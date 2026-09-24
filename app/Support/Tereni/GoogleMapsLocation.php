@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Log;
  * Pulls coordinates out of whatever gets pasted from Google Maps:
  * bare coordinates ("43.3209, 21.9033" or 43°19'15.2"N 21°54'11.9"E), a full
  * maps URL (@lat,lng / !3dlat!4dlng / ?q=lat,lng / /search/lat,+lng), or a
- * share link (maps.app.goo.gl, share.google) — possibly with the place name
+ * share link (maps.app.goo.gl, share.google) - possibly with the place name
  * pasted above it.
  *
  * Share links are followed hop by hop, since Google puts the coordinates in a
  * redirect target when it puts them anywhere. A link that only names the
  * place (share.google from Google Search, place-id-only maps links) renders
- * its location with JavaScript alone — no plain HTTP page carries it. For
+ * its location with JavaScript alone - no plain HTTP page carries it. For
  * those, the link-preview page Google serves to crawlers exposes the Street
  * View panorama in front of the place, whose position is an approximate
  * (street-side) location; the result is flagged `approx`.
@@ -51,7 +51,7 @@ class GoogleMapsLocation
             return $coords;
         }
 
-        // Share sheets paste "Place name\nhttps://…" — take the link itself.
+        // Share sheets paste "Place name\nhttps://…" - take the link itself.
         if (preg_match('~https?://\S+~i', $input, $m)) {
             return self::extract($m[0]) ?? self::resolve($m[0]);
         }
@@ -88,7 +88,7 @@ class GoogleMapsLocation
         return null;
     }
 
-    /** 43°19'15.2"N 21°54'11.9"E — what Google shows for a dropped pin. */
+    /** 43°19'15.2"N 21°54'11.9"E - what Google shows for a dropped pin. */
     private static function extractDms(string $text): ?array
     {
         $part = '(\d{1,3})°\s*(\d{1,2})[\'′]\s*(\d{1,2}(?:\.\d+)?)["″]?\s*([NSEW])';
@@ -134,7 +134,7 @@ class GoogleMapsLocation
             }
 
             // 2. As a link-preview crawler: the og:image is the Street View
-            //    panorama in front of the place — its position is close enough
+            //    panorama in front of the place - its position is close enough
             //    to flag as approximate.
             $page = self::follow($url, self::CRAWLER_HEADERS, $trace)['body'] ?? '';
             if (preg_match('/panoid=([\w-]+)/', $page, $m) && ($coords = self::panoramaLocation($m[1]))) {

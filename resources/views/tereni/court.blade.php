@@ -1,4 +1,4 @@
-<x-tereni.layout :title="$court->name" :description="'Prijavi stanje terena: ' . $court->name . ($court->facility ? ' — ' . $court->facility->name : '')">
+<x-tereni.layout :title="$court->name" :description="'Prijavi stanje terena: ' . $court->name . ($court->facility ? ' - ' . $court->facility->name : '')">
     <x-slot:styles>
         .gallery-main { position:relative; overflow:hidden; }
         .gallery-main img { width:100%; height:min(52vh,420px); object-fit:cover; display:block; cursor:zoom-in; }
@@ -59,7 +59,7 @@
             <div class="gallery-main card">
                 <a id="g-open" href="{{ $galleryUrls[0] }}" target="_blank" rel="noopener"
                     aria-label="Uvećaj fotografiju terena">
-                    <img id="g-main" src="{{ $galleryUrls[0] }}" alt="Fotografija terena — {{ $court->name }}">
+                    <img id="g-main" src="{{ $galleryUrls[0] }}" alt="Fotografija terena - {{ $court->name }}">
                 </a>
                 @if (count($galleryUrls) > 1)
                     <button type="button" class="g-nav" id="g-prev" style="left:.6rem" aria-label="Prethodna fotografija">‹</button>
@@ -110,7 +110,7 @@
                 <div style="grid-column:1/-1">
                     <label for="category">Tip problema *</label>
                     <select id="category" name="category" required>
-                        <option value="">— izaberi —</option>
+                        <option value="">- izaberi -</option>
                         @foreach ($categories as $value => $label)
                             <option value="{{ $value }}" @selected(old('category') === $value)>{{ $label }}</option>
                         @endforeach
@@ -180,7 +180,7 @@
                             <p style="margin:.6rem 0 .4rem">{{ $report->description }}</p>
                         @endif
 
-                        {{-- Status timeline — the public pressure. --}}
+                        {{-- Status timeline - the public pressure. --}}
                         @if ($report->statusChanges->isNotEmpty())
                             <ol class="timeline">
                                 @foreach ($report->statusChanges as $change)

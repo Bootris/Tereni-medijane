@@ -14,7 +14,7 @@ PORT="${PORT:-8000}"
 if [ ! -f .env ]; then
     cp .env.example .env
     php artisan key:generate
-    echo "⚠  Kreiran je .env iz .env.example — popuni DB_* kredencijale pa pokreni ponovo."
+    echo "⚠  Kreiran je .env iz .env.example - popuni DB_* kredencijale pa pokreni ponovo."
     exit 1
 fi
 
@@ -36,7 +36,7 @@ php artisan migrate --force
 php artisan storage:link >/dev/null 2>&1 || true
 php artisan config:clear >/dev/null
 
-# Admin ruta je tajna i po klijentu — čitaj je iz .env, nikad ne hardkoduj /admin.
+# Admin ruta je tajna i po klijentu - čitaj je iz .env, nikad ne hardkoduj /admin.
 ADMIN_PATH=$(grep -E '^ADMIN_PATH=' .env | tail -1 | cut -d= -f2- | tr -d '"')
 ADMIN_PATH="${ADMIN_PATH:-admin}"
 

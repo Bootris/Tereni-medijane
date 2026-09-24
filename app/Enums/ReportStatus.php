@@ -18,7 +18,7 @@ enum ReportStatus: string
     case Resolved = 'reseno';
     case Rejected = 'odbijeno';
 
-    /** Human label (Serbian — this is a municipal tool for Medijana). */
+    /** Human label (Serbian - this is a municipal tool for Medijana). */
     public function label(): string
     {
         return match ($this) {
@@ -42,7 +42,7 @@ enum ReportStatus: string
         };
     }
 
-    /** A terminal status closes the report — no further work is expected. */
+    /** A terminal status closes the report - no further work is expected. */
     public function isClosed(): bool
     {
         return in_array($this, [self::Resolved, self::Rejected], true);

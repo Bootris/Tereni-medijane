@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * Teren — a single field. Its `slug` is the QR-code target: scanning the plaque
+ * Teren - a single field. Its `slug` is the QR-code target: scanning the plaque
  * on the fence opens /teren/{slug}.
  */
 class Court extends Model
@@ -51,7 +51,7 @@ class Court extends Model
 
         // Gallery images removed in the admin form disappear from the array;
         // remove their files too so the public disk never accumulates orphans.
-        // Deletion is guarded — see deleteGalleryFiles().
+        // Deletion is guarded - see deleteGalleryFiles().
         static::updated(function (Court $court) {
             $removed = array_diff(
                 $court->getOriginal('gallery') ?? [],
@@ -71,7 +71,7 @@ class Court extends Model
     }
 
     /**
-     * Delete gallery images from the public disk — defensively. The stored
+     * Delete gallery images from the public disk - defensively. The stored
      * paths round-trip through a client-controllable form field, so only
      * files inside this module's own directory are ever deleted, and never
      * one that another court's gallery still references.
@@ -129,7 +129,7 @@ class Court extends Model
         return $this->reports()->where('is_public', true)->latest();
     }
 
-    /** Open public reports — the ones that flag a court as "ima problem". */
+    /** Open public reports - the ones that flag a court as "ima problem". */
     public function openPublicReports(): HasMany
     {
         return $this->reports()
@@ -143,7 +143,7 @@ class Court extends Model
     }
 
     /**
-     * Fields that can actually be shown on the map need coordinates — their
+     * Fields that can actually be shown on the map need coordinates - their
      * own, or inherited from the facility (see latitude()/longitude()).
      */
     public function scopeLocatable(Builder $query): Builder

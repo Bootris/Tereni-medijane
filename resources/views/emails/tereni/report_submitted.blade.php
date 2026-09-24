@@ -14,17 +14,17 @@
                     <tr>
                         <td style="background:#14532d;padding:24px 32px;">
                             <p style="margin:0;color:#86efac;font-size:12px;letter-spacing:2px;text-transform:uppercase;">
-                                Tereni Medijana
+                                Tereni Medijane
                             </p>
                             <h1 style="margin:8px 0 0;color:#ffffff;font-size:20px;font-weight:600;">
-                                Nova prijava — {{ $report->court->name }}
+                                Nova prijava - {{ $report->court->name }}
                             </h1>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:28px 32px;color:#33414f;font-size:14px;line-height:1.7;">
                             <p style="margin:0 0 4px;"><strong>Teren:</strong>
-                                {{ $report->court->name }}@if ($report->court->facility) — {{ $report->court->facility->name }}@endif
+                                {{ $report->court->name }}@if ($report->court->facility) - {{ $report->court->facility->name }}@endif
                             </p>
                             <p style="margin:0 0 4px;"><strong>Kategorija:</strong> {{ $report->category->label() }}</p>
                             <p style="margin:0 0 4px;"><strong>Prijavio:</strong>

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * Citizen report submission — no registration. Anti-spam: per-IP rate limit
+ * Citizen report submission - no registration. Anti-spam: per-IP rate limit
  * (route throttle), mandatory photo, honeypot, and moderation before the report
  * appears on the public timeline.
  */
@@ -29,7 +29,7 @@ class ReportController extends Controller
         $validated = $request->validate([
             'category' => ['required', Rule::in(array_keys(ReportCategory::options()))],
             'description' => ['nullable', 'string', 'max:2000'],
-            'photo' => ['required', 'image', 'max:8192'], // proof is mandatory — anti-spam
+            'photo' => ['required', 'image', 'max:8192'], // proof is mandatory - anti-spam
             'reporter_name' => ['nullable', 'string', 'max:255'],
             'reporter_contact' => ['nullable', 'string', 'max:255'],
         ], [
@@ -52,7 +52,7 @@ class ReportController extends Controller
         return back()->with('report_success', true);
     }
 
-    /** Public "flag" on an already-visible report — draws moderator attention. */
+    /** Public "flag" on an already-visible report - draws moderator attention. */
     public function flag(Report $report)
     {
         abort_unless($report->is_public, 404);

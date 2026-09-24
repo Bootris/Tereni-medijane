@@ -2,25 +2,25 @@
 
 Jedan Laravel backend koji služi **sve** klijentske frontend-e. Frontend-agnostičan:
 javni sadržaj ide kroz JSON API, uređivanje kroz Filament admin. Menja se samo `.env`
-i sadržaj — nikad oblik API-ja.
+i sadržaj - nikad oblik API-ja.
 
 **Stack:** Laravel 12 · Filament v4 (admin) · SQLite · PHP 8.2 · Sanctum (opciono, za tokene).
 
 ## Odgovornosti
 
-- **Public API** (`/api/v1/*`) — read-only sadržaj + prijem kontakt forme. Keširan.
-- **Admin** (Filament na `config('site.admin_path')`) — sav CRUD, upload slika, uloge.
-- **Media** — `storage:link`, konverzije slika (thumb/hero), servira apsolutne URL-ove.
-- **Integracije** — mail (Laravel mailer), Calendly (embed URL u Settings),
+- **Public API** (`/api/v1/*`) - read-only sadržaj + prijem kontakt forme. Keširan.
+- **Admin** (Filament na `config('site.admin_path')`) - sav CRUD, upload slika, uloge.
+- **Media** - `storage:link`, konverzije slika (thumb/hero), servira apsolutne URL-ove.
+- **Integracije** - mail (Laravel mailer), Calendly (embed URL u Settings),
   Google Calendar (opcioni modul, faza 6).
 
-## Modeli (core — svaki sajt ih ima)
+## Modeli (core - svaki sajt ih ima)
 
 `Post` · `Category` · `TeamMember` · `ContactMessage` · `Setting` (key/value → brend
 i kontakt) · `User` (uloge `admin`/`editor`). Svaki ima Filament resource.
-Per-klijent dodaci (npr. `Service`, `GalleryItem`) idu kao opcioni moduli — vidi dole.
+Per-klijent dodaci (npr. `Service`, `GalleryItem`) idu kao opcioni moduli - vidi dole.
 
-## API ugovor (`/api/v1`) — ovo je stabilni interfejs
+## API ugovor (`/api/v1`) - ovo je stabilni interfejs
 
 Sve `GET` rute su javne i keširane; oblik se **ne menja** bez verzije (`v2`).
 
@@ -48,14 +48,14 @@ Sve `GET` rute su javne i keširane; oblik se **ne menja** bez verzije (`v2`).
 - **Samo objavljeni sadržaj** (`published_at <= now`, nije draft). Draft preview: token.
 - **Keš:** `Cache-Control` + ETag; invalidacija na `Post::saved`/`Setting::saved`.
 - **CORS:** dozvoli origine klijentskih frontend-a (`config/cors.php`, iz `.env`).
-- **Apsolutni URL-ovi** za slike (koristi `APP_URL`) — frontend je na drugom domenu.
+- **Apsolutni URL-ovi** za slike (koristi `APP_URL`) - frontend je na drugom domenu.
 
 ## Auth model
 
-- **Read (GET)** — javno, bez tokena (keširano na ivici).
-- **Contact (POST)** — bez tokena, ali honeypot + rate limit (`throttle:5,1`).
-- **Write/uređivanje** — isključivo kroz Filament (session auth), **ne** kroz API.
-- **Preview draftova** (opciono) — Sanctum token u `X-Preview-Token` header-u.
+- **Read (GET)** - javno, bez tokena (keširano na ivici).
+- **Contact (POST)** - bez tokena, ali honeypot + rate limit (`throttle:5,1`).
+- **Write/uređivanje** - isključivo kroz Filament (session auth), **ne** kroz API.
+- **Preview draftova** (opciono) - Sanctum token u `X-Preview-Token` header-u.
 
 Tako frontend nikad ne drži kredencijale koji nešto menjaju.
 

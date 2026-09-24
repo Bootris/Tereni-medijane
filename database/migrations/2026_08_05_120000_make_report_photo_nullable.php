@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * A citizen photo stays mandatory at submission (anti-spam validation), but
  * moderation must be able to REMOVE an inappropriate photo without deleting
- * the whole report — so the column itself becomes nullable.
+ * the whole report - so the column itself becomes nullable.
  */
 return new class extends Migration
 {

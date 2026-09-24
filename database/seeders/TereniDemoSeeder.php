@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Pilot data for the "Tereni Medijana" MVP so the map, the field pages and the
  * admin aren't empty on a fresh install: three locations from the field survey
- * (docs/TERENI.md, phase 1) with the photos taken on site — a school yard, an
+ * (docs/TERENI.md, phase 1) with the photos taken on site - a school yard, an
  * asphalt court between apartment blocks, and the courts in the park.
  *
  * Photos live in database/seeders/photos/tereni/ and are copied onto the public
- * disk under tereni/courts/ — the same directory the admin uploads to, and the
+ * disk under tereni/courts/ - the same directory the admin uploads to, and the
  * only one Court::deleteGalleryFiles() is allowed to clean up.
  *
  * Names, addresses and coordinates are placeholders until the survey confirms
@@ -101,7 +101,7 @@ class TereniDemoSeeder extends Seeder
         ]);
     }
 
-    /** Asfaltni teren između zgrada — mreža stoji, linije izbledele. */
+    /** Asfaltni teren između zgrada - mreža stoji, linije izbledele. */
     private function blockCourt(): void
     {
         $facility = Facility::firstOrCreate(

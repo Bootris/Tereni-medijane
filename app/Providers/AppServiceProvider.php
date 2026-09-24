@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // All site views receive $site — the key/value settings managed in the
+        // All site views receive $site - the key/value settings managed in the
         // admin panel. Guarded so console commands work before migrations run.
         try {
             View::share('site', Setting::allCached());
