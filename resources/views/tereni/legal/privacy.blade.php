@@ -1,6 +1,7 @@
 <p>Tereni Medijane je javna mapa sportskih terena na kojoj građani prijavljuju stanje terena (bez registracije), a prijave se, nakon provere, javno prikazuju sa istorijom statusa. Ova politika objašnjava koje podatke o ličnosti obrađujemo, zašto, koliko dugo i koja prava imate, u skladu sa Zakonom o zaštiti podataka o ličnosti („Sl. glasnik RS“, br. 87/2018).</p>
 
 <h2>1. Rukovalac podacima</h2>
+<p>Tereni Medijane je projekat saradnje <strong>Saradnje nove generacije</strong> iz Niša i <strong>Kancelarije za mlade opštine Medijana</strong>.</p>
 @include('tereni.legal._operator')
 <p>Za pitanja o zaštiti podataka i ostvarivanje prava pišite na gornju imejl adresu.</p>
 

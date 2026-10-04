@@ -1,6 +1,7 @@
 <p>Korišćenjem servisa Tereni Medijane prihvatate ove uslove. Ako se ne slažete, nemojte koristiti servis.</p>
 
 <h2>1. Pružalac usluge</h2>
+<p>Tereni Medijane je projekat saradnje <strong>Saradnje nove generacije</strong> iz Niša i <strong>Kancelarije za mlade opštine Medijana</strong>. Servis nije zvanični kanal organa opštine, osim ako je to na sajtu izričito navedeno.</p>
 @include('tereni.legal._operator')
 
 <h2>2. Šta je servis</h2>

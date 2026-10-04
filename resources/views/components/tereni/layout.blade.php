@@ -215,7 +215,7 @@
                 </span>
                 <span class="brand-text">
                     Tereni <em>Medijane</em>
-                    <small>Gradska opština Medijana · Niš</small>
+                    <small>Niš · Medijana</small>
                 </span>
             </a>
             <nav class="top" aria-label="Glavna navigacija">
@@ -243,7 +243,7 @@
 
     <footer class="site">
         <div class="wrap">
-            <span class="copy">© {{ date('Y') }} {{ $brand }} · Prijavi stanje terena u Medijani. Bez registracije.</span>
+            <span class="copy">© {{ date('Y') }} {{ $brand }} · Prijavi stanje terena u Medijani. Bez registracije. Projekat udruženja Saradnja nove generacije iz Niša i Kancelarije za mlade opštine Medijana.</span>
             <nav aria-label="Podnožje">
                 <a href="{{ route('tereni.map') }}">Mapa</a>
                 <a href="{{ route('tereni.list') }}">Svi tereni</a>
