@@ -52,6 +52,12 @@ class ManageSettings extends Page
                             ->helperText('Shown in the header, footer and browser title.'),
                         TextInput::make('tagline')
                             ->helperText('Short line under the name (hero subtitle).'),
+                        TextInput::make('legal_name')
+                            ->label('Legal name (operator)')
+                            ->helperText('Who runs the service (data controller). Shown in the Privacy policy and Terms.'),
+                        TextInput::make('legal_id')
+                            ->label('Tax ID / registration no. (PIB / MB)')
+                            ->helperText('Shown in the Privacy policy and Terms.'),
                         FileUpload::make('logo')
                             ->image()
                             ->disk('public')

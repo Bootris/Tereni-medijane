@@ -26,6 +26,8 @@ if (config('site.features.tereni')) {
     Route::get('/mapa', [TereniMapController::class, 'index'])->name('tereni.map');
     Route::get('/tereni', [TereniCourtController::class, 'index'])->name('tereni.list');
     Route::view('/uputstva', 'tereni.guide')->name('tereni.guide');
+    Route::get('/privatnost', fn () => view('tereni.legal', ['doc' => 'privacy']))->name('tereni.privacy');
+    Route::get('/uslovi', fn () => view('tereni.legal', ['doc' => 'terms']))->name('tereni.terms');
     Route::get('/teren/{court}', [TereniCourtController::class, 'show'])->name('tereni.court');
     Route::get('/teren/{court}/qr.svg', [TereniQrController::class, 'show'])->name('tereni.court.qr');
 

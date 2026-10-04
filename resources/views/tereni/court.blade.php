@@ -141,6 +141,12 @@
                 </div>
             </div>
 
+            <p class="muted" style="margin:1rem 0 0;font-size:.88rem">
+                Ne fotografišite ljude (posebno decu) ni registarske tablice. Slanjem prijave pristajete da se fotografija i opis,
+                nakon provere, objave na javnoj stranici terena. Ime i kontakt se ne objavljuju. Više u
+                <a href="{{ route('tereni.privacy') }}">Politici privatnosti</a> i
+                <a href="{{ route('tereni.terms') }}">Uslovima korišćenja</a>.
+            </p>
             <div style="margin-top:1rem">
                 <button type="submit" class="btn">Pošalji prijavu</button>
             </div>

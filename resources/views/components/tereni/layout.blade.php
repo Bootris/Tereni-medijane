@@ -248,6 +248,8 @@
                 <a href="{{ route('tereni.map') }}">Mapa</a>
                 <a href="{{ route('tereni.list') }}">Svi tereni</a>
                 <a href="{{ route('tereni.guide') }}">Uputstva</a>
+                <a href="{{ route('tereni.privacy') }}">Privatnost</a>
+                <a href="{{ route('tereni.terms') }}">Uslovi</a>
             </nav>
         </div>
     </footer>
