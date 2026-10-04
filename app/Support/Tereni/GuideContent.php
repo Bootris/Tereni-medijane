@@ -102,10 +102,10 @@ class GuideContent
     {
         $help = [
             'prijavljeno' => 'Prijava je primljena i čeka proveru moderatora. Još nije javno vidljiva.',
-            'potvrdjeno' => 'Opština je proverila prijavu i potvrdila da problem postoji.',
+            'potvrdjeno' => 'Administracija sajta je proverila prijavu i potvrdila da problem postoji.',
             'u_planu' => 'Popravka je uvrštena u plan radova.',
             'reseno' => 'Problem je otklonjen. Teren je ponovo u redu.',
-            'odbijeno' => 'Prijava nije prihvaćena, uz javno obrazloženje zašto (npr. duplikat ili nije u nadležnosti opštine).',
+            'odbijeno' => 'Prijava nije prihvaćena, uz javno obrazloženje zašto (npr. duplikat ili nije u nadležnosti nikoga ko održava teren).',
         ];
 
         $items = array_map(fn (ReportStatus $s) => sprintf(
@@ -157,7 +157,7 @@ class GuideContent
                 ],
                 [
                     'title' => 'Šta se dešava posle prijave',
-                    'body' => '<p>Svaka prijava prvo ide na <strong>moderaciju</strong>: urednik opštine proveri fotografiju i opis i tek onda je objavi na stranici terena. Tako na sajtu nema lažnih ni uvredljivih prijava.</p>'
+                    'body' => '<p>Svaka prijava prvo ide na <strong>moderaciju</strong>: administracija sajta proveri fotografiju i opis i tek onda je objavi na stranici terena. Tako na sajtu nema lažnih ni uvredljivih prijava.</p>'
                         .'<p>Zatim prijava prolazi kroz statuse. Svaki korak se beleži sa datumom i, gde treba, javnom napomenom:</p>'
                         .'<p>[statusi]</p>'
                         .'<p>Ako si ostavio e-mail ili telefon, dobićeš obaveštenje pri svakoj promeni statusa. Ako nisi, status uvek možeš da proveriš na stranici terena.</p>',
